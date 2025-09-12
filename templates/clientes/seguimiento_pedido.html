@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Mis pedidos</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <h1>Mis pedidos</h1>
+
+    {% if pedidos %}
+    <table border="1">
+        <thead>
+            <tr>
+                <th>ID Pedido</th>
+                <th>Fecha Solicitud</th>
+                <th>Fecha Entrega</th>
+                <th>Total</th>
+                <th>Estado</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for pedido in pedidos %}
+            <tr>
+                <td>{{ pedido.ID_Pedido }}</td>
+                <td>{{ pedido.Fecha_Solicitud }}</td>
+                <td>{{ pedido.Fecha_Entrega }}</td>
+                <td>${{ pedido.Total }}</td>
+                <td>{{ pedido.Estado_Pedido }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No tienes pedidos registrados.</p>
+    {% endif %}
+
+</body>
+</html>
