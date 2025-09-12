@@ -37,16 +37,17 @@
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item dropdown">
                         <a class="nav-link active c" aria-current="page" href="#" id="catalogoDropdown" role="button"
-                            data-bs-toggle="dropdown" aria-expanded="false">Catálogo</a>
+                        data-bs-toggle="dropdown" aria-expanded="false">Catálogo</a>
                         <ul class="dropdown-menu" aria-labelledby="catalogoDropdown">
-                            <li><a class="dropdown-item" href="#">Chescake</a></li>
-                            <li><a class="dropdown-item" href="#">Tortas</a></li>
-                            <li><a class="dropdown-item" href="#">Tiramisu</a></li>
-                            <li><a class="dropdown-item" href="#">Hojaldres</a></li>
-                            <li><a class="dropdown-item" href="#">Flan</a></li>
+                            {% for categoria in categorias %}
+                            <li>
+                                <a class="dropdown-item" href="{{ url_for('admin.productos_por_categoria', id_categoria=categoria.ID_Categoria) }}">
+                                    {{ categoria.Nombre_categoria }}
+                                </a>
+                            </li>
+                            {% endfor %}
                         </ul>
                     </li>
-
                 </ul>
                 <br>
                 <div margin-left: 5px;>

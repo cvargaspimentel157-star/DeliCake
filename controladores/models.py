@@ -48,9 +48,12 @@ class Producto(db.Model):
     Unidades_disponibles = db.Column(db.Integer)
     Fecha_Disponibilidad = db.Column(db.Date)
     ID_Administrador = db.Column(db.Integer, db.ForeignKey('Administrador.ID_admin'))
+    Imagen = db.Column(db.String(255))
+    Descuento = db.Column(db.Numeric(5,2),default=0.00)
+    ID_Categoria = db.Column(db.Integer, db.ForeignKey('Categoria.ID_Categoria'),nullable=False)
 
     personalizaciones = db.relationship('PersonalizacionProducto', backref='producto', lazy=True)
-    categorias = db.relationship('Categoria', backref='producto', lazy=True)
+  
 
 
 class PersonalizacionProducto(db.Model):
@@ -107,7 +110,8 @@ class Categoria(db.Model):
     Nombre_categoria = db.Column(db.String(20))
     Nombre_producto = db.Column(db.String(40))
     Estado = db.Column(db.Enum('Activa', 'Inactiva'))
-    ID_Producto = db.Column(db.Integer, db.ForeignKey('Producto.ID_Producto'))
+    
+    productos=db.relationship('Producto', backref = 'Categoria', lazy =True)
 
 
 class DetalleProducto(db.Model):

@@ -18,25 +18,29 @@
         <span>🍰</span>
     </div>
 
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+    <nav class="navbar navbar-expand-lg  sticky-top ">
         <div class="container">
-            <a class="navbar-brand text-warning fw-bold" href="#">Sweet Bakes</a>
+            <a class="navbar-brand text-warning fw-bold" style="margin-right: 100px;">
+                <img src="{{ url_for('static', filename='img/logo_DeliCake.jpg') }}" alt=""
+                    style="width: 75px; height: 75px; border-radius: 50%; margin-left: 20px;"><br>DeliCake</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item dropdown">
-                        <a class="nav-link active c" aria-current="page" href="#" id="catalogoDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Catálogo</a>
+                        <a class="nav-link active c" aria-current="page" href="#" id="catalogoDropdown" role="button"
+                        data-bs-toggle="dropdown" aria-expanded="false">Catálogo</a>
                         <ul class="dropdown-menu" aria-labelledby="catalogoDropdown">
-                            <li><a class="dropdown-item" href="#">Chescake</a></li>
-                            <li><a class="dropdown-item" href="#">Tortas</a></li>
-                            <li><a class="dropdown-item" href="#">Tiramisu</a></li>
-                            <li><a class="dropdown-item" href="#">Hojaldres</a></li>
-                            <li><a class="dropdown-item" href="#">Flan</a></li>
+                            {% for categoria in categorias %}
+                            <li>
+                                <a class="dropdown-item" href="{{ url_for('admin.productos_por_categoria', id_categoria=categoria.ID_Categoria) }}">
+                                    {{ categoria.Nombre_categoria }}
+                                </a>
+                            </li>
+                            {% endfor %}
                         </ul>
                     </li>
-
                 </ul>
                     <li class="nav-item">
                         <a class="nav-link" href="#">Mi Cuenta</a>

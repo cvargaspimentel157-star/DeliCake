@@ -1,13 +1,13 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
-from controladores.models import db, Usuario, Cliente
+from controladores.models import db, Usuario, Cliente, Categoria
 from routes.admin import bp as admin_bp
 
 app = Flask(__name__)
 
 # Configuración de la base de datos
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:@127.0.0.1:3306/delicake_db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:@127.0.0.1:3306/delicake'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = 'clave_secreta'
 
@@ -27,11 +27,13 @@ def load_user(user_id):
 # Rutas de la aplicación
 @app.route('/')
 def home():
-    return render_template('index.html')
+    categorias = Categoria.query.filter_by(Estado="Activa").all()
+    return render_template("index.html", categorias=categorias)
+                                                                                                                                                                                                                                                                                                                                                                                                            
 
 @app.route('/publica')
 def publica():
-    return render_template('index-1.html')
+    return render_template('index-1.html')       
 
 @app.route('/register', methods=['GET', 'POST', ])
 def register():
