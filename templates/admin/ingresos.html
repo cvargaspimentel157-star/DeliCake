@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ingresos</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/ingresos.css') }}">
+</head>
+
+<body>
+  <div class="falling-products">
+    <span>🧁</span><span>🍪</span><span>🎂</span><span>🍩</span><span>🍰</span><span>🧁</span><span>🍪</span><span>🎂</span>
+  </div>
+  
+  <a href="javascript:history.back()" class="volver-btn">← Volver</a>
+  
+    <nav class="navbar navbar-expand-lg sticky-top">
+        <div class="container">
+            <a class="navbar-brand fw-bold color border-white"
+                style="font-size: 30px; text-align: center; margin-left: 10px;">
+                <img src="{{ url_for('static', filename='img/logo_DeliCake.jpg') }}" alt="Logo"
+                    style="width: 75px; height: 75px; border-radius: 50%; margin-left: 20px;">
+                <br href="{{ url_for('publica') }}">DeliCake</br>
+            </a>
+            <button class="navbar-toggler border border-white" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+                
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('admin.panel') }}">Panel-control</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('admin.pagos_pendientes') }}">Pagos💵</a>
+                    </li>
+                </ul>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('admin.anuncios') }}">Anuncios</a>
+                </li>
+
+
+
+                <form action="{{ url_for('admin.buscar_adm') }}" method="get" class="d-flex me-3"
+                    style="text-align: cover;">
+                    <input class="form-control me-2" style="height: 45px;" type="search" name="q"
+                        placeholder="Buscar productos..." value="{{ request.args.get('q','') }}">
+                    <button class="btn btn-outline-warning" type="submit"><i class="bi bi-search"></i></button>
+                </form>
+
+
+
+            </div>
+        </div>
+    </nav>
+
+  <div class="container mt-4 ingresos-categoria">
+    <h2 class="text-center mb-4">💰 Ingresos Totales por Categoría</h2>
+
+    <!-- Formulario de filtro: usar GET para que la URL muestre mes/anio -->
+    <form method="get" class="text-center mb-4 filtro-form">
+        <label for="mes">Mes:</label>
+        <select name="mes" id="mes">
+            <option value="">-- Todo el año --</option>
+            {% set meses = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'] %}
+            {% for nombre in meses %}
+            <option value="{{ loop.index }}">{{ nombre }}</option>
+            {% endfor %}
+
+        </select>
+
+        <label for="anio" class="ms-3">Año:</label>
+        <select name="anio" id="anio" required>
+            <option value="">-- Selecciona --</option>
+            {% for a in range(2023, 2031) %}
+            <option value="{{ a }}" {% if anio == a %}selected{% endif %}>{{ a }}</option>
+            {% endfor %}
+        </select>
+
+        <button type="submit" class="btn-filtrar ms-3">Filtrar</button>
+    </form>
+
+    <div class="total-general text-center mb-3">
+        {% if mes and anio %}
+            <h5>Total del mes {{ mes }} del {{ anio }}: <span>${{ '{:,.0f}'.format(total_general or 0) }}</span></h5>
+        {% elif anio %}
+            <h5>Total del año {{ anio }}: <span>${{ '{:,.0f}'.format(total_general or 0) }}</span></h5>
+        {% else %}
+            <h5>Total general: <span>${{ '{:,.0f}'.format(total_general or 0) }}</span></h5>
+        {% endif %}
+    </div>
+
+    <div class="card p-3 shadow-sm">
+      <canvas id="graficoIngresos" style="max-height:420px;"></canvas>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+ 
+  const categorias = JSON.parse('{{ categorias | tojson | safe }}');
+  const ingresos = JSON.parse('{{ ingresos | tojson | safe }}');
+
+  const ctx = document.getElementById('graficoIngresos').getContext('2d');
+
+  const grafico = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: categorias,
+      datasets: [{
+        label: 'Ingresos ($)',
+        data: ingresos,
+        backgroundColor: [
+          'rgba(255, 236, 179, 0.9)',
+          'rgba(255, 223, 186, 0.9)',
+          'rgba(255, 192, 203, 0.9)',
+          'rgba(241, 207, 223, 0.9)',
+          'rgba(236, 180, 205, 0.9)'
+        ],
+        borderColor: '#b9769d',
+        borderWidth: 1,
+        borderRadius: 8
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: {
+            callback: function(value) {
+              return '$' + value.toLocaleString();
+            }
+          }
+        }
+      },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: function(context) {
+              return '$' + context.parsed.y.toLocaleString();
+            }
+          }
+        }
+      }
+    }
+  });
+</script>
+
+
+
+   {% block footer%}
+{% include './footer.html' %}
+{% endblock %}
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<style>
+
+  .inactividad-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(255, 240, 246, 0.55);
+    backdrop-filter: blur(7px);
+    z-index: 1050;
+    justify-content: center;
+    align-items: center;
+    pointer-events: auto; 
+    animation: fadeIn 0.6s ease-in-out;
+  }
+
+  
+  .inactividad-modal {
+    background: linear-gradient(145deg, #fff7fb 0%, #ffe1ed 100%);
+    color: #5c3a55;
+    border-radius: 22px;
+    box-shadow: 0 8px 30px rgba(185, 128, 157, 0.25);
+    padding: 35px 45px;
+    text-align: center;
+    width: 380px;
+    font-family: "Poppins", sans-serif;
+    animation: popIn 0.4s ease-out;
+  }
+
+  .inactividad-modal h3 {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: #824a76;
+    margin-bottom: 10px;
+  }
+
+  .inactividad-modal p {
+    font-size: 1rem;
+    color: #704f67;
+    margin-bottom: 18px;
+  }
+
+  /* ✨ Botón */
+  .btn-continuar {
+    background: linear-gradient(135deg, #f9c6da, #f4a6c0);
+    color: #542c47;
+    border: none;
+    border-radius: 12px;
+    padding: 10px 25px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 3px 10px rgba(238, 160, 185, 0.4);
+  }
+
+  .btn-continuar:hover {
+    transform: scale(1.05);
+    background: linear-gradient(135deg, #fbc8db, #f59bbd);
+    box-shadow: 0 5px 14px rgba(242, 167, 193, 0.6);
+  }
+
+ 
+  @keyframes popIn {
+    from { transform: scale(0.85); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  #contador {
+    font-weight: bold;
+    color: #e86c9a;
+    animation: pulse 1s infinite alternate;
+  }
+
+  @keyframes pulse {
+    from { transform: scale(1); opacity: 0.85; }
+    to { transform: scale(1.15); opacity: 1; }
+  }
+</style>
+
+
+<div class="inactividad-overlay" id="inactividadOverlay">
+  <div class="inactividad-modal">
+    <h3>💤 HAZ ESTADO INACTI@ 🚨</h3>
+    <p>Serás redirigid@ al inicio en <span id="contador">10</span> segundos 💫</p>
+    <button class="btn-continuar" id="cancelarRedireccion">Seguir aquí 💖</button>
+  </div>
+</div>
+
+
+<script>
+(function() {
+  const TIEMPO_INACTIVIDAD = 60 * 1000; 
+  const URL_REDIRECT = "{{ url_for('home') }}"; 
+  const overlay = document.getElementById('inactividadOverlay');
+  const contadorEl = document.getElementById('contador');
+  const btnCancelar = document.getElementById('cancelarRedireccion');
+  let inactividadTimer, redireccionTimer;
+
+  function mostrarVentana() {
+    overlay.style.display = 'flex';
+    let tiempo = 10;
+    contadorEl.textContent = tiempo;
+    redireccionTimer = setInterval(() => {
+      tiempo--;
+      contadorEl.textContent = tiempo;
+      if (tiempo <= 0) {
+        clearInterval(redireccionTimer);
+        window.location.href = URL_REDIRECT;
+      }
+    }, 1000);
+  }
+
+  function reiniciarInactividad() {
+    clearTimeout(inactividadTimer);
+    clearInterval(redireccionTimer);
+    overlay.style.display = 'none';
+    inactividadTimer = setTimeout(mostrarVentana, TIEMPO_INACTIVIDAD);
+  }
+
+  btnCancelar.addEventListener('click', () => {
+    overlay.style.display = 'none';
+    reiniciarInactividad();
+  });
+
+  ["mousemove", "keydown", "click", "scroll", "touchstart"].forEach(e =>
+    document.addEventListener(e, reiniciarInactividad)
+  );
+
+  reiniciarInactividad();
+})();
+</script>
+
+
+</body>
+</html>

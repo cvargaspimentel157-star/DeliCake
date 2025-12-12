@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Verificar código</title>
+   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/verificar_con.css') }}">
+</head>
+
+<div class="falling-products">
+  <span>🧁</span>
+  <span>🍪</span>
+  <span>🎂</span>
+  <span>🍩</span>
+  <span>🍰</span>
+  <span>🧁</span>
+  <span>🍪</span>
+  <span>🎂</span>
+</div>
+
+<body>
+  <a href="javascript:history.back()" class="volver-btn">
+  ← Volver
+</a>
+  <form method="POST" action="{{ url_for('verificar_codigo') }}">
+    <label for="codigo">Código de verificación:</label>
+    <input type="text" name="codigo" id="codigo" required>
+    <button type="submit">Verificar</button><br><br>
+    <form action="{{ url_for('recuperar') }}" method="get">
+      <button type="submit">Recibir nuevo código</button>
+      <br><br>
+      <p style="text-align: center; font-size: 15px; font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;">"escribe tu codigo sin espacios ni letras"</p>
+    </form>
+  </form>
+ 
+    <!-- Footer -->
+     {% block footer%}
+{% include './footer.html' %}
+{% endblock %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

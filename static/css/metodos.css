@@ -1,0 +1,262 @@
+body {
+  background: linear-gradient(
+    135deg,
+    #fffafc 0%,
+    #ffeef7 35%,
+    #fff8e5 100%
+  );
+  min-height: 100vh;
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  color: #5a3d47;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+
+
+ h1 {
+  background: #ffffff; /* fondo blanco */
+  padding: 15px 25px;
+  text-align: center;
+ 
+}
+
+
+
+h1 .emoji {
+  font-size: 2.5rem;
+  color: #5a3d47; /* color normal, sin degradado */
+  margin: 0; /* elimina margen por defecto */
+  justify-content: center; /
+}
+
+h1 .titulo-texto {
+  background: linear-gradient(90deg, #f591bbff, #f5c3f2ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  justify-content: center; /
+}
+
+
+    .titulo-linea {
+      width: 80px;
+      height: 4px;
+      background: linear-gradient(90deg, #ffb6d5, #d7b4f3);
+      border-radius: 2px;
+      margin: 0 auto 30px auto;
+      box-shadow: 0 2px 6px rgba(255, 182, 206, 0.4);
+    }
+
+    form {
+      text-align: center;
+      margin-bottom: 30px;
+      background: #ffe6f0;
+      padding: 15px;
+      border-radius: 15px
+      display: inline-block;
+      margin-left: 50%;
+      transform: translateX(-50%);
+      box-shadow: 0 4px 10px rgba(255, 182, 206, 0.3);
+    }
+
+    form label {
+      font-weight: 600;
+      margin: 0 5px;
+      color: #8a536a;
+    }
+    form input {
+      border: 1px solid #ffb6d5;
+      border-radius: 8px;
+      padding: 5px 8px;
+      width: 70px;
+      text-align: center;
+      margin-right: 8px;
+    }
+
+    form button {
+      background: linear-gradient(135deg, #ffb6d5, #ff8ac6);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 7px 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    form button:hover {
+      background: linear-gradient(135deg, #ff9fc6, #ff6fa3);
+      transform: scale(1.05);
+    }
+
+    .tarjeta {
+      width: 85%;
+      max-width: 500px;
+      margin: 10px auto;
+      background: #fff0f7;
+      border-radius: 20px;
+      padding: 15px;
+      box-shadow: 0 3px 10px rgba(255, 182, 206, 0.25);
+      border: 1px solid #ffd3e3;
+    }
+
+    .metodo {
+      font-weight: 600;
+      color: #82465a;
+    }
+
+    .monto {
+      float: right;
+      font-weight: bold;
+      color: #d64b8e;
+    }
+
+    .barra {
+      background: #fff;
+      border-radius: 10px;
+      height: 10px;
+      margin-top: 8px;
+    }
+
+    .progreso {
+      background: linear-gradient(90deg, #ff94c2, #ffc1dc);
+      height: 10px;
+      border-radius: 10px;
+      transition: width 0.5s ease;
+    }
+
+    /* 🌸 Gráficas más pequeñas, centradas y coquette */
+    .graficas-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 35px;
+      margin-top: 40px;
+    }
+
+    .grafica-box {
+      background: #fff0f7;
+      border: 1px solid #ffd3e3;
+      border-radius: 20px;
+      padding: 15px;
+      width: 200px;
+      height: 200px;
+      box-shadow: 0 3px 10px rgba(255, 182, 206, 0.3);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: 0.3s;
+    }
+
+    .grafica-box:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 5px 14px rgba(255, 160, 197, 0.4);
+    }
+
+    canvas {
+      width: 120px !important;
+      height: 120px !important;
+    }
+
+    .grafica-titulo {
+      font-size: 0.9rem;
+      color: #b3477d;
+      margin-top: 10px;
+      font-weight: 600;
+    }
+.falling-products {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.falling-products span {
+  position: absolute;
+  top: -50px;
+  font-size: 24px;
+  animation-name: fall;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  opacity: 0.8;
+}
+
+.falling-products span:nth-child(1) { left: 10%; animation-duration: 8s; animation-delay: 0s; }
+.falling-products span:nth-child(2) { left: 25%; animation-duration: 9s; animation-delay: 2s; }
+.falling-products span:nth-child(3) { left: 40%; animation-duration: 7s; animation-delay: 4s; }
+.falling-products span:nth-child(4) { left: 60%; animation-duration: 6s; animation-delay: 1s; }
+.falling-products span:nth-child(5) { left: 80%; animation-duration: 10s; animation-delay: 3s; }
+.falling-products span:nth-child(6) { left: 15%; animation-duration: 9s; animation-delay: 5s; }
+.falling-products span:nth-child(7) { left: 50%; animation-duration: 7s; animation-delay: 0s; }
+.falling-products span:nth-child(8) { left: 75%; animation-duration: 8s; animation-delay: 6s; }
+
+
+
+
+.volver-btn:hover {
+  background: #eea2ddff; /* rosa más intenso */
+  color: #fff;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 12px rgba(166, 77, 121, 0.4);
+}
+
+
+
+.volver-btn {
+  position: absolute;
+  top: 10px;
+  left: 20px;
+  background: linear-gradient(135deg, #f9c5d1, #fbc2eb); /* rosa pastel degradado */
+  color: #fff;
+  font-weight: bold;
+  font-family: 'Segoe UI', cursive, sans-serif;
+  padding: 12px 28px;
+  border: none;
+  border-radius: 25px;
+  text-decoration: none;
+  box-shadow: 0 4px 10px rgba(249, 144, 187, 0.4);
+  transition: all 0.3s ease;
+}
+
+.volver-btn:hover {
+  background: linear-gradient(135deg, #fbc2eb, #f9c5d1);
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 6px 14px rgba(249, 144, 187, 0.5);
+}
+
+.volver-btn:active {
+  transform: scale(0.97);
+}
+
+.volver-btn::before {
+  content: "🎀 "; /* detalle coquette */
+}
+
+
+
+
+
+
+
+@keyframes fall {
+  0% {
+    transform: translateY(-50px) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(110vh) rotate(360deg);
+    opacity: 0;
+  }
+}

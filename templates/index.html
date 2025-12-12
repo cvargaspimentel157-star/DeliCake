@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DeliCake</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+</head>
+
+<body>
+  <div class="falling-products">
+    <span>🧁</span>
+    <span>🍪</span>
+    <span>🎂</span>
+    <span>🍩</span>
+    <span>🍰</span>
+    <span>🧁</span>
+    <span>🍪</span>
+    <span>🎂</span>
+  </div>
+  
+
+
+  {% block navbar%}
+  {% include './navbar_index.html' %}
+  {% endblock %}
+
+  <section class="carrusel">
+    {% if banner_actual %}
+    <video autoplay muted loop playsinline width="700">
+      <source src="{{ url_for('static', filename=banner_actual) }}" type="video/mp4">
+      Tu navegador no soporta el video.
+    </video>
+    {% else %}
+    <p>No hay banner disponible</p>
+    {% endif %}
+  </section>
+
+  <section class="productos">
+    <h2>🌸 PRODUCTOS MÁS DESTACADOS</h2>
+    <p class="productos-subtitle">Postres únicos con el estilo <span>delicado</span> 💕</p>
+
+    <div class="carrusel-wrapper">
+      <button class="carrusel-btn izquierda" onclick="moverCarrusel(-1)">❮</button>
+
+      <div class="productos-container" id="productosCarrusel">
+        {% for producto in productos_destacados %}
+        <div class="producto-card">
+          <div class="producto-Img">
+            <img src="{{ url_for('static', filename='img/' ~ producto.Imagen) }}" alt="{{ producto.Nombre_producto }}">
+          </div>
+          <div class="producto-info">
+            <h3>{{ producto.Nombre_producto }}</h3>
+            <p>{{ producto.Descripcion_producto }}</p>
+            <p class="precio">${{ producto.Precio_Unitario }}</p>
+
+            {% if producto.Precio_descuento %}
+            <span class="badge bg-danger">-{{ producto.Descuento }}%</span>
+            <p>
+              <span style="font-size:18px; font-weight:bold; color:green;">
+                ${{ producto.Precio_descuento }}
+              </span>
+              <span style="text-decoration:line-through; opacity:0.6; margin-left:10px;">
+                ${{ producto.Precio_Unitario }}
+              </span>
+            </p>
+            {% else %}
+            <p>Precio: ${{ producto.Precio_Unitario }}</p>
+            {% endif %}
+
+            <button class="btn-carrito" onclick="abrirModal(
+                {{ producto.ID_Producto }},
+                '{{ producto.Nombre_producto }}',
+                {{ producto.Precio_Unitario }},
+                '{{ producto.Imagen }}'
+              )">🛒 ¡AGREGALO!</button>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+
+      <button class="carrusel-btn derecha" onclick="moverCarrusel(1)">❯</button>
+    </div>
+  </section>
+
+
+  <div id="modalCarrito" class="modal-carrito" style="display: none;">
+    <div class="modal-contenido">
+      <div class="modal-header">
+        <span>🛒 Agregar al carrito</span>
+        <button class="cerrar" onclick="cerrarModal()">×</button>
+      </div>
+
+      <div class="modal-body">
+        <img id="modalImagen" src="" alt="Producto" class="modal-img">
+        <h3 id="modalNombre"></h3>
+        <p><strong>Precio:</strong> $<span id="modalPrecio"></span></p>
+
+        <div class="cantidad-controles">
+          <button onclick="cambiarCantidad(-1)">−</button>
+          <input type="text" id="modalCantidad" value="1" readonly>
+          <button onclick="cambiarCantidad(1)">+</button>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="cancelar" onclick="cerrarModal()">Cancelar</button>
+        <button class="confirmar" onclick="confirmarAgregar()">Confirmar</button>
+      </div>
+    </div>
+  </div>
+
+ <br><br><br>
+  <section class="suscripcion">
+    <div class="container">
+      <h2 class="mb-4">💌 SUSCRIBETE A NUESTRO BOLETIN</h2>
+      <p class="mb-4">Recibe novedades, promociones y lanzamientos de productos directamente en tu correo.</p>
+      <form action="{{ url_for('suscribir') }}" method="POST">
+        <input type="email" name="correo" placeholder="Ingresa tu correo electrónico" required>
+        <button type="submit">Inscribirme 🎀 </button>
+      </form>
+  </section>
+  <section class="calificacion">
+
+    <a href="{{ url_for('clientes.lanzamientos') }}" class="boton-flotante">
+      <span class="texto">Ver más</span>
+      <div class="icono">+</div>
+    </a>
+
+    <div class="container">
+      <h2 class="mb-4">Califica y reseña nuestro servicio</h2>
+
+      <form action="{{ url_for('reseñar') }}" method="POST" class="w-50 mx-auto">
+        <input type="hidden" name="correo" value="{{ session.get('correo') }}">
+
+        <div class="mb-3">
+          <label class="form-label">Tu calificación:</label>
+          <div class="star-rating">
+            {% for i in range(5,0,-1) %}
+            <input type="radio" id="estrella{{i}}" name="estrellas" value="{{i}}" required>
+            <label for="estrella{{i}}">⭐</label>
+            {% endfor %}
+          </div>
+        </div>
+
+
+
+
+        <div class="mb-3">
+          <textarea name="comentario" class="form-control" placeholder="Escribe tu opinión..." required></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-pink fw-bold">Enviar reseña</button>
+      </form>
+
+
+      <div class="mt-5">
+        <h3>Opiniones de clientes</h3>
+        {% for r in reseñas %}
+        <div class="card my-3 p-3">
+          <p><strong>{{ r.correo }}</strong> - {{ r.estrellas }} ⭐</p>
+          <p>{{ r.comentario }}</p>
+          <small>{{ r.fecha.strftime("%d/%m/%Y") }}</small>
+        </div>
+        {% else %}
+        <p>No hay reseñas todavía.</p>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+  <section class="nosotros">
+    <h2>👩‍🍳 Nuestro Equipo</h2>
+    <div class="nosotros-contenido">
+      <img src="{{ url_for('static', filename='img/equipo_delicake.jpeg') }}" alt="Equipo DeliCake">
+      <p>Somos un equipo apasionado por la repostería 💕, dedicados a crear postres únicos con un estilo delicado,
+        elegante y lleno de amor. 🎀</p>
+    </div>
+  </section>
+
+
+
+
+  {% block footer%}
+  {% include './footer.html' %}
+  {% endblock %}
+
+
+
+  <div class="modal fade" id="loginAlertModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Acción no permitida</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          Debes iniciar sesión o registrarte para agregar un producto.
+        </div>
+        <div class="modal-footer">
+          <a href="{{ url_for('login') }}" class="btn btn-primary">Iniciar sesión</a>
+          <a href="{{ url_for('register') }}" class="btn btn-secondary">Registrarse</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+      var botones = document.querySelectorAll(".agregarBtn");
+
+      var modalElement = document.getElementById("loginAlertModal");
+      var modal = new bootstrap.Modal(modalElement);
+
+
+      botones.forEach(function (boton) {
+        boton.addEventListener("click", function () {
+          modal.show();
+        });
+      });
+
+    });
+
+
+    let productoSeleccionado = {};
+
+    function abrirModal(id, nombre, precio, imagen) {
+
+      let rutaImagen = imagen.includes("static/") || imagen.includes("img/")
+        ? imagen
+        : `/static/img/${imagen}`;
+
+      productoSeleccionado = { id, nombre, precio, imagen: rutaImagen, cantidad: 1 };
+
+      document.getElementById("modalNombre").textContent = nombre;
+      document.getElementById("modalPrecio").textContent = precio.toFixed(2);
+      document.getElementById("modalImagen").src = rutaImagen;
+      document.getElementById("modalCantidad").value = 1;
+      document.getElementById("modalCarrito").style.display = "flex";
+    }
+
+
+    function cerrarModal() {
+      document.getElementById("modalCarrito").style.display = "none";
+    }
+
+
+    function cambiarCantidad(valor) {
+      const input = document.getElementById("modalCantidad");
+      let cantidad = parseInt(input.value) + valor;
+      if (cantidad < 1) cantidad = 1;
+      input.value = cantidad;
+      productoSeleccionado.cantidad = cantidad;
+    }
+
+
+    function confirmarAgregar() {
+      alert("Debes iniciar sesión o registrarte para agregar productos al carrito.");
+      window.location.href = "";
+    }
+
+
+    const carrusel = document.getElementById("productosCarrusel");
+    const btnIzquierda = document.querySelector(".carrusel-btn.izquierda");
+    const btnDerecha = document.querySelector(".carrusel-btn.derecha");
+
+    function moverCarrusel(direccion) {
+      const desplazamiento = 300;
+      carrusel.scrollBy({ left: direccion * desplazamiento, behavior: "smooth" });
+      setTimeout(actualizarFlechas, 400);
+    }
+
+    function actualizarFlechas() {
+      const maxScroll = carrusel.scrollWidth - carrusel.clientWidth;
+      btnIzquierda.classList.toggle("hidden", carrusel.scrollLeft <= 0);
+      btnDerecha.classList.toggle("hidden", carrusel.scrollLeft >= maxScroll - 5);
+    }
+
+    carrusel.addEventListener("scroll", actualizarFlechas);
+    window.addEventListener("resize", actualizarFlechas);
+    document.addEventListener("DOMContentLoaded", actualizarFlechas);
+
+  </script>
+</body>
+
+</html>

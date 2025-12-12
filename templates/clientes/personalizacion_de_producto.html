@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Personalizar Producto</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/personalizacion_de_producto.css') }}">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+  <a href="javascript:history.back()" class="volver-btn">← Volver</a>
+  <div class="falling-products">
+    <span>🧁</span>
+    <span>🍪</span>
+    <span>🎂</span>
+    <span>🍩</span>
+    <span>🍰</span>
+    <span>🧁</span>
+    <span>🍪</span>
+    <span>🎂</span>
+  </div>
+  
+
+  <div class="container py-4">
+    <h1 class="text-center mb-4">🎂 Personaliza tu Producto</h1>
+
+    <!-- ✅ Se agregó el id aquí -->
+    <form id="formPersonalizacion" method="POST" class="bg-white p-4 rounded shadow">
+
+      <!-- Cobertura -->
+      <div class="mb-4">
+        <label class="form-label fw-bold d-block mb-2">Cobertura:</label>
+        <div class="options-group">
+          <label class="option-circle">
+            <input type="radio" name="cobertura" value="chocolate" required>
+            <span>🍫 Chocolate</span>
+          </label>
+          <label class="option-circle">
+            <input type="radio" name="cobertura" value="maracuya">
+            <span>🥭 Maracuyá</span>
+          </label>
+          <label class="option-circle">
+            <input type="radio" name="cobertura" value="vainilla">
+            <span>🍦 Vainilla</span>
+          </label>
+          <label class="option-circle">
+            <input type="radio" name="cobertura" value="fresa">
+            <span>🍓 Fresa</span>
+          </label>
+          <label class="option-circle">
+            <input type="radio" name="cobertura" value="melocoton">
+            <span>🍑 Melocotón</span>
+          </label>
+        </div>
+      </div>
+
+      <hr>
+
+      <!-- Relleno -->
+      <div class="mb-4">
+        <label class="form-label fw-bold d-block mb-2">Relleno:</label>
+        <div class="options-group">
+          <label class="option-circle">
+            <input type="radio" name="relleno" value="vainilla" required>
+            <span>🍦 Vainilla</span>
+          </label>
+          <label class="option-circle">
+            <input type="radio" name="relleno" value="dulce de leche">
+            <span>🥛 Dulce de leche</span>
+          </label>
+          <label class="option-circle">
+            <input type="radio" name="relleno" value="nueces">
+            <span>🌰 Nueces</span>
+          </label>
+          <label class="option-circle">
+            <input type="radio" name="relleno" value="crema de limon">
+            <span>🍋 Crema de limón</span>
+          </label>
+        </div>
+      </div>
+
+      <hr>
+
+      <!-- Masa -->
+      <div class="mb-4">
+        <label class="form-label fw-bold d-block mb-2">Masa:</label>
+        <div class="options-group">
+          <label class="option-circle">
+            <input type="radio" name="masa" value="fermentadas" required>
+            <span>♨️ Fermentada</span>
+          </label>
+          <label class="option-circle">
+            <input type="radio" name="masa" value="azucarada">
+            <span>🍚 Azucarada</span>
+          </label>
+          <label class="option-circle">
+            <input type="radio" name="masa" value="batida">
+            <span>🥣 Batida</span>
+          </label>
+        </div>
+      </div>
+
+      <hr>
+
+      <!-- Porciones -->
+      <div class="mb-4">
+        <label class="form-label fw-bold">Porciones:</label>
+        <div class="options-group">
+          <label class="option-circle">
+            <input type="radio" name="porciones" value="1" required>
+            <span>🍰 1 porción</span>
+          </label>
+          <label class="option-circle">
+            <input type="radio" name="porciones" value="2">
+            <span>🍰🍰 2 porciones</span>
+          </label>
+          <label class="option-circle">
+            <input type="radio" name="porciones" value="1/2">
+            <span>🍫 1/2</span>
+          </label>
+          <label class="option-circle">
+            <input type="radio" name="porciones" value="entero">
+            <span>🎂 Entero</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Mensaje -->
+      <div class="mb-4">
+        <label class="form-label fw-bold">Mensaje en el pastel (máx. 15 caracteres):</label>
+        <input type="text" class="form-control mt-2" name="mensaje" maxlength="15" placeholder="¡Feliz cumpleaños!">
+      </div>
+
+      <hr>
+
+      <!-- Adicionales -->
+      <div class="mb-4">
+        <label class="form-label fw-bold d-block mb-2">Adicionales:</label>
+        <div class="options-group">
+          <label class="option-circle">
+            <input type="checkbox" name="adicionales" value="fresa">
+            <span>🍓 Fresa</span>
+          </label>
+          <label class="option-circle">
+            <input type="checkbox" name="adicionales" value="arequipe">
+            <span>🥛 Arequipe</span>
+          </label>
+          <label class="option-circle">
+            <input type="checkbox" name="adicionales" value="chocolate">
+            <span>🍫 Chocolate extra</span>
+          </label>
+          <label class="option-circle">
+            <input type="checkbox" name="adicionales" value="chantilly">
+            <span>🍰 Chantilly</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="text-center">
+        <button type="submit" class="btn btn-pastel px-4">
+          ✨ Guardar Personalización
+        </button>
+      </div>
+
+    </form>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- 💕 Script de confirmación rosita -->
+  <script>
+    document.getElementById("formPersonalizacion").addEventListener("submit", function (e) {
+      e.preventDefault(); // Evita el envío inmediato
+
+      Swal.fire({
+        title: "¿Guardar tu personalización?",
+        text: "✨ ¡Tu pastel quedará hermoso y a tu gusto!",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonText: "Sí, guardar 💖",
+        cancelButtonText: "Cancelar",
+        background: "#ffe6f0",
+        color: "#4b2c4b",
+        confirmButtonColor: "#ff77a9",
+        cancelButtonColor: "#d1b7d8",
+        customClass: {
+          popup: "rounded-4 shadow-lg"
+        }
+      }).then((result) => {
+        if (result.isConfirmed) {
+          e.target.submit(); // Enviar el formulario si confirma
+        }
+      });
+    });
+  </script>
+<style>
+
+  .inactividad-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(255, 240, 246, 0.55);
+    backdrop-filter: blur(7px);
+    z-index: 1050;
+    justify-content: center;
+    align-items: center;
+    pointer-events: auto; 
+    animation: fadeIn 0.6s ease-in-out;
+  }
+
+  
+  .inactividad-modal {
+    background: linear-gradient(145deg, #fff7fb 0%, #ffe1ed 100%);
+    color: #5c3a55;
+    border-radius: 22px;
+    box-shadow: 0 8px 30px rgba(185, 128, 157, 0.25);
+    padding: 35px 45px;
+    text-align: center;
+    width: 380px;
+    font-family: "Poppins", sans-serif;
+    animation: popIn 0.4s ease-out;
+  }
+
+  .inactividad-modal h3 {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: #824a76;
+    margin-bottom: 10px;
+  }
+
+  .inactividad-modal p {
+    font-size: 1rem;
+    color: #704f67;
+    margin-bottom: 18px;
+  }
+
+  /* ✨ Botón */
+  .btn-continuar {
+    background: linear-gradient(135deg, #f9c6da, #f4a6c0);
+    color: #542c47;
+    border: none;
+    border-radius: 12px;
+    padding: 10px 25px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 3px 10px rgba(238, 160, 185, 0.4);
+  }
+
+  .btn-continuar:hover {
+    transform: scale(1.05);
+    background: linear-gradient(135deg, #fbc8db, #f59bbd);
+    box-shadow: 0 5px 14px rgba(242, 167, 193, 0.6);
+  }
+
+ 
+  @keyframes popIn {
+    from { transform: scale(0.85); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  #contador {
+    font-weight: bold;
+    color: #e86c9a;
+    animation: pulse 1s infinite alternate;
+  }
+
+  @keyframes pulse {
+    from { transform: scale(1); opacity: 0.85; }
+    to { transform: scale(1.15); opacity: 1; }
+  }
+</style>
+
+
+<div class="inactividad-overlay" id="inactividadOverlay">
+  <div class="inactividad-modal">
+    <h3>💤 HAZ ESTADO INACTI@ 🚨</h3>
+    <p>Serás redirigid@ al inicio en <span id="contador">10</span> segundos 💫</p>
+    <button class="btn-continuar" id="cancelarRedireccion">Seguir aquí 💖</button>
+  </div>
+</div>
+
+
+<script>
+(function() {
+  const TIEMPO_INACTIVIDAD = 60 * 1000; 
+  const URL_REDIRECT = "{{ url_for('home') }}"; 
+  const overlay = document.getElementById('inactividadOverlay');
+  const contadorEl = document.getElementById('contador');
+  const btnCancelar = document.getElementById('cancelarRedireccion');
+  let inactividadTimer, redireccionTimer;
+
+  function mostrarVentana() {
+    overlay.style.display = 'flex';
+    let tiempo = 10;
+    contadorEl.textContent = tiempo;
+    redireccionTimer = setInterval(() => {
+      tiempo--;
+      contadorEl.textContent = tiempo;
+      if (tiempo <= 0) {
+        clearInterval(redireccionTimer);
+        window.location.href = URL_REDIRECT;
+      }
+    }, 1000);
+  }
+
+  function reiniciarInactividad() {
+    clearTimeout(inactividadTimer);
+    clearInterval(redireccionTimer);
+    overlay.style.display = 'none';
+    inactividadTimer = setTimeout(mostrarVentana, TIEMPO_INACTIVIDAD);
+  }
+
+  btnCancelar.addEventListener('click', () => {
+    overlay.style.display = 'none';
+    reiniciarInactividad();
+  });
+
+  ["mousemove", "keydown", "click", "scroll", "touchstart"].forEach(e =>
+    document.addEventListener(e, reiniciarInactividad)
+  );
+
+  reiniciarInactividad();
+})();
+</script>
+
+</body>
+</html>

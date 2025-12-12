@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Productos Más Vendidos</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/productosvendidos.css') }}">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<a href="javascript:history.back()" class="volver-btn">
+  ← Volver
+</a>
+<div class="falling-products">
+    <span>🧁</span>
+    <span>🍪</span>
+    <span>🎂</span>
+    <span>🍩</span>
+    <span>🍰</span>
+    <span>🧁</span>
+    <span>🍪</span>
+    <span>🎂</span>
+  </div>
+
+  <div class="container">
+    <h1>🌸 PRODUCTOS MAS VENDIDOS 🌸
+        🍮
+    </h1>
+<div class="filtros">
+    <select id="mesFiltro">
+      <option value="">Mes</option>
+      <option value="1">Enero</option>
+      <option value="2">Febrero</option>
+      <option value="3">Marzo</option>
+      <option value="4">Abril</option>
+      <option value="5">Mayo</option>
+      <option value="6">Junio</option>
+      <option value="7">Julio</option>
+      <option value="8">Agosto</option>
+      <option value="9">Septiembre</option>
+      <option value="10">Octubre</option>
+      <option value="11">Noviembre</option>
+      <option value="12">Diciembre</option>
+    </select>
+
+    <select id="anioFiltro">
+      <option value="">Año</option>
+      {% for anio in anios %}
+        <option value="{{ anio }}">{{ anio }}</option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <div class="chart-wrapper">
+    <canvas id="ventasChart"></canvas>
+  </div>
+</div>
+    <div class="chart-wrapper">
+      <canvas id="ventasChart"></canvas>
+    </div>
+  </div>
+  
+
+  <script>
+    const nombres = {{ nombres|tojson }};
+    const cantidades = {{ cantidades|tojson }};
+
+    const ctx = document.getElementById('ventasChart').getContext('2d');
+    const ventasChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: nombres,
+        datasets: [{
+          label: 'Cantidad Vendida',
+          data: cantidades,
+          backgroundColor: 'rgba(255, 182, 193, 0.7)', 
+          borderColor: 'rgba(255, 105, 180, 1)',
+          borderWidth: 1,
+          borderRadius: 10,
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        indexAxis: 'x',
+        plugins: {
+          legend: { display: false },
+          tooltip: { enabled: true }
+        },
+        scales: {
+          x: {
+            ticks: { font: { family: "'Poppins', sans-serif", size: 12 } },
+            grid: { display: false }
+          },
+          y: {
+            beginAtZero: true,
+            ticks: { font: { family: "'Poppins', sans-serif", size: 12 } },
+            grid: { color: 'rgba(255,182,193,0.2)' }
+          }
+        },
+        interaction: { intersect: false, mode: 'index' },
+        // Scroll horizontal si hay muchos productos
+        onResize: function(chart, size) {
+          chart.options.scales.x.ticks.maxRotation = 90;
+        }
+      }
+    });
+const mesFiltro = document.getElementById('mesFiltro');
+const anioFiltro = document.getElementById('anioFiltro');
+
+function actualizarGrafica() {
+  const mes = mesFiltro.value;
+  const anio = anioFiltro.value;
+
+  fetch(`/admin/productos_mas_vendidos_data?mes=${mes}&anio=${anio}`)
+    .then(res => res.json())
+    .then(data => {
+      ventasChart.data.labels = data.nombres;
+      ventasChart.data.datasets[0].data = data.cantidades;
+      ventasChart.update();
+    });
+}
+
+mesFiltro.addEventListener('change', actualizarGrafica);
+anioFiltro.addEventListener('change', actualizarGrafica);
+
+    
+  </script>
+
+  {% block footer%}
+{% include './footer.html' %}
+{% endblock %}
+<style>
+
+  .inactividad-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(255, 240, 246, 0.55);
+    backdrop-filter: blur(7px);
+    z-index: 1050;
+    justify-content: center;
+    align-items: center;
+    pointer-events: auto; 
+    animation: fadeIn 0.6s ease-in-out;
+  }
+
+  
+  .inactividad-modal {
+    background: linear-gradient(145deg, #fff7fb 0%, #ffe1ed 100%);
+    color: #5c3a55;
+    border-radius: 22px;
+    box-shadow: 0 8px 30px rgba(185, 128, 157, 0.25);
+    padding: 35px 45px;
+    text-align: center;
+    width: 380px;
+    font-family: "Poppins", sans-serif;
+    animation: popIn 0.4s ease-out;
+  }
+
+  .inactividad-modal h3 {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: #824a76;
+    margin-bottom: 10px;
+  }
+
+  .inactividad-modal p {
+    font-size: 1rem;
+    color: #704f67;
+    margin-bottom: 18px;
+  }
+
+  /* ✨ Botón */
+  .btn-continuar {
+    background: linear-gradient(135deg, #f9c6da, #f4a6c0);
+    color: #542c47;
+    border: none;
+    border-radius: 12px;
+    padding: 10px 25px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 3px 10px rgba(238, 160, 185, 0.4);
+  }
+
+  .btn-continuar:hover {
+    transform: scale(1.05);
+    background: linear-gradient(135deg, #fbc8db, #f59bbd);
+    box-shadow: 0 5px 14px rgba(242, 167, 193, 0.6);
+  }
+
+ 
+  @keyframes popIn {
+    from { transform: scale(0.85); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  #contador {
+    font-weight: bold;
+    color: #e86c9a;
+    animation: pulse 1s infinite alternate;
+  }
+
+  @keyframes pulse {
+    from { transform: scale(1); opacity: 0.85; }
+    to { transform: scale(1.15); opacity: 1; }
+  }
+</style>
+
+
+<div class="inactividad-overlay" id="inactividadOverlay">
+  <div class="inactividad-modal">
+    <h3>💤 HAZ ESTADO INACTI@ 🚨</h3>
+    <p>Serás redirigid@ al inicio en <span id="contador">10</span> segundos 💫</p>
+    <button class="btn-continuar" id="cancelarRedireccion">Seguir aquí 💖</button>
+  </div>
+</div>
+
+
+<script>
+(function() {
+  const TIEMPO_INACTIVIDAD = 60 * 1000; 
+  const URL_REDIRECT = "{{ url_for('home') }}"; 
+  const overlay = document.getElementById('inactividadOverlay');
+  const contadorEl = document.getElementById('contador');
+  const btnCancelar = document.getElementById('cancelarRedireccion');
+  let inactividadTimer, redireccionTimer;
+
+  function mostrarVentana() {
+    overlay.style.display = 'flex';
+    let tiempo = 10;
+    contadorEl.textContent = tiempo;
+    redireccionTimer = setInterval(() => {
+      tiempo--;
+      contadorEl.textContent = tiempo;
+      if (tiempo <= 0) {
+        clearInterval(redireccionTimer);
+        window.location.href = URL_REDIRECT;
+      }
+    }, 1000);
+  }
+
+  function reiniciarInactividad() {
+    clearTimeout(inactividadTimer);
+    clearInterval(redireccionTimer);
+    overlay.style.display = 'none';
+    inactividadTimer = setTimeout(mostrarVentana, TIEMPO_INACTIVIDAD);
+  }
+
+  btnCancelar.addEventListener('click', () => {
+    overlay.style.display = 'none';
+    reiniciarInactividad();
+  });
+
+  ["mousemove", "keydown", "click", "scroll", "touchstart"].forEach(e =>
+    document.addEventListener(e, reiniciarInactividad)
+  );
+
+  reiniciarInactividad();
+})();
+</script>
+
+
+</body>
+</html>

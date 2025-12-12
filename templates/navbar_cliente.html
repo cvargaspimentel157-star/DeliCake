@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <style>
+        .navbar {
+    
+    padding: 0.5rem 1rem;
+    background: rgba(255, 239, 254, 0.9); 
+    z-index: 10;
+}
+
+.navbar-brand {
+    font-size: 2.1rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    color: #ffffff !important; 
+    transition: transform 0.3s ease, color 0.3s ease;
+}
+.navbar-brand:hover {
+    transform: scale(1.05);
+    color: var(--highlight-color);
+}
+
+.navbar .nav-link {
+    color: palevioletred;;
+    margin: 0 0.5rem;
+    font-weight: 600;
+    transition: color 0.3s ease, transform 0.2s ease;
+}
+.navbar .nav-link:hover {
+    color: palevioletred;
+    transform: translateY(-2px);
+}
+.navbar .nav-link.active {
+    color: palevioletred;
+    border-bottom: 2px solid var(--warning-color);
+    padding-bottom: 3px;
+    font-size: 20px;
+}
+
+
+.btn-pink {
+  background-color: #f8c8dc;
+  color: #5c2a4a;
+  border: none;
+  transition: background-color 0.3s ease;
+}
+
+.btn-pink:hover,
+.btn-pink:focus {
+  background-color: #f4b0cc;
+  color: #fff;
+}
+
+
+.dropdown-menu {
+  border-radius: 8px;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+  border: none;
+}
+
+.nav-link.active {
+  color: #d63384;
+  font-weight: bold;
+}
+
+
+
+.btn-outline-light {
+  color: #d63384;
+  border-color: #f8c8dc;
+}
+
+.btn-outline-light:hover {
+  background-color: #f8c8dc;
+  color: #5c2a4a;
+}
+
+
+
+.navbar a button {
+    background-color: var(--primary-color);
+    border: 2px solid var(--warning-color);
+    color: var(--warning-color);
+    padding: 6px 14px;
+    margin-right: 20px;
+    border-radius: 7px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease, color 0.3s ease;
+}
+.navbar a button:hover {
+    background-color: var(--warning-color);
+    color: var(--primary-color);
+    transform: scale(1.05);
+}
+
+.navbar .form-control {
+    border-radius: 20px;
+    border: 2px solid var(--warning-color);
+    padding: 10px 19px;
+    width: 250px;
+  font-size: 1rem;
+  outline: none;
+    transition: box-shadow 0.3s ease, border-color 0.3s ease;
+    color: var(--dark-color);
+}
+
+
+.navbar .form-control::placeholder {
+    color: palevioletred;
+    opacity: 1;
+}
+.navbar .form-control:focus {
+    outline: none;
+    box-shadow: 0 0 10px var(--warning-color);
+    border-color: var(--highlight-color);
+}
+
+.navbar .btn-outline-warning {
+    border-radius: 50%;
+    padding: 6px 10px;
+    font-size: 15px;
+    margin-left: 6px;
+    border: palevioletred;
+    color: palevioletred;
+    background-color: transparent;
+    transition: background-color 0.3s ease, transform 0.2s ease, color 0.3s ease;
+}
+.navbar .btn-outline-warning:hover {
+    background-color: var(--warning-color);
+    color: palevioletred;
+    transform: scale(1.1);
+}
+
+@media  (min-width: 300px) and (max-width: 650px) {
+  .navbar {
+    
+    padding: 0.5rem 1rem;
+    background: rgba(255, 239, 254, 0.9); 
+    z-index: 10;
+    align-items: center;
+}
+
+}
+
+    </style>
+<!-- Contenedor de Toasts (posición flotante) -->
+<div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 2000;">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="toast align-items-center text-bg-{{ category }} border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="d-flex">
+                        <div class="toast-body">{{ message }}</div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                    </div>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const toastElements = document.querySelectorAll('.toast');
+    toastElements.forEach(toastEl => {
+        const toast = new bootstrap.Toast(toastEl, { delay: 5000 });
+        toast.show();
+    });
+});
+</script>
+
+
+
+
+
+
+    <nav class="navbar navbar-expand-lg sticky-top">
+        <div class="container">
+            <a class="navbar-brand fw-bold color border-white"
+                style="font-size: 30px; text-align: center; margin-left: 10px;">
+                <img src="{{ url_for('static', filename='img/logo_DeliCake.jpg') }}" alt="Logo"
+                    style="width: 75px; height: 75px; border-radius: 50%; margin-left: 20px;">
+                <br href="{{ url_for('publica') }}">Delicake</br>
+            </a>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link active c" aria-current="page" href="#" id="catalogoDropdown" role="button"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                            Catálogo
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="catalogoDropdown">
+                            {% for categoria in categorias %}
+                            <li>
+                                <a class="dropdown-item"
+                                    href="{{ url_for('clientes.productos_por_categoria', id_categoria=categoria.ID_Categoria) }}">
+                                    {{ categoria.Nombre_categoria }}
+                                </a>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('clientes.mi_cuenta') }}">Mi Cuenta</a>
+                    </li>
+                </ul>
+                <!-- 🔹 Nuevo enlace Carrito -->
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('clientes.carrito') }}">
+                        🛒 Carrito
+                    </a>
+                </li>
+                </ul>
+
+                <br><br>
+                <div class="notificacion-wrapper">
+                    <a href="{{ url_for('clientes.campanita') }}" class="campana">
+                        🔔
+                        {% if total_notificaciones|default(0) > 0 %}
+                        <span class="contador">{{ total_notificaciones }}</span>
+                        {% endif %}
+                    </a>
+                </div>
+
+                <form action="{{ url_for('clientes.buscar_cliente') }}" method="get" class="d-flex"
+                    style="margin-left: 20px;">
+                    <input class="form-control me-2" style="height: 45px;" type="search" name="q"
+                        placeholder="Buscar productos..." value="{{ request.args.get('q','') }}">
+                    <button class="btn  border-radius 50% border-white" type="submit"><i class="bi bi-search"></i></button>
+                </form>
+
+
+            </div>
+        </div>
+    </nav>
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+
+   
+
+
+</body>
+
+</html>

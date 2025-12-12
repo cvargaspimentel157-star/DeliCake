@@ -1,0 +1,66 @@
+<h1>PAGOS PENDIENTES 💰</h1>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/Pendientes.css') }}">
+<a href="javascript:history.back()" class="volver-btn">
+  ← Volver
+</a>
+
+<table border="1" cellpadding="8">
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+      <div class="alert alert-{{ category }}">{{ message }}</div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+
+    <thead>
+      <tr>
+        <th>ID Pago</th>
+        <th>ID Pedido</th>
+        <th>Cliente</th>
+        <th>Total</th>
+        <th>Método</th>
+        
+        <th>Estado</th>
+        
+      </tr>
+    </thead>
+    <tbody>
+    {% for p in pagos %}
+      <tr>
+        <td>{{ p.ID_pago }}</td>
+        <td>{{ p.ID_Pedido if p.ID_Pedido else "Sin pedido" }}</td>
+        <td>{{ p.cliente_nombre or "Cliente no disponible" }}</td>
+        <td>${{ "{:,.2f}".format(p.total) }}</td>
+        <td>{{ p.metodo or "-" }}</td>
+        <td>{{ p.estado or "-" }}</td>
+        <td>{{ p.fecha or "-" }}</td>
+        <td>
+            <a href="{{ url_for('admin.aprobar_pago', id_pago=p.ID_pago) }}">Aprobar</a>
+            |
+            <a href="{{ url_for('admin.rechazar_pago', id_pago=p.ID_pago) }}">Rechazar</a>
+             <button class="delete-btn">Eliminar</button>
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+       {% block footer%}
+{% include './footer.html' %}
+{% endblock %}
+</table>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const deleteButtons = document.querySelectorAll('.delete-btn');
+    
+    deleteButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const row = btn.closest('tr');
+        row.style.transition = 'opacity 0.5s ease';
+        row.style.opacity = 0;
+        setTimeout(() => row.remove(), 500);
+      });
+    });
+  });
+</script>
+

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Pago con Daviplata</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/pago_nequi.css') }}">
+</head>
+<body>
+<a href="javascript:history.back()" class="volver-btn">← Volver</a>
+  <div class="falling-products">
+    <span>🧁</span>
+    <span>🍪</span>
+    <span>🎂</span>
+    <span>🍩</span>
+    <span>🍰</span>
+    <span>🧁</span>
+    <span>🍪</span>
+    <span>🎂</span>
+  </div>
+
+<div class="container">
+    <div class="card">
+        <h2>Escanea el código con Daviplata</h2>
+
+        <h2>Total a pagar: $<span id="total_daviplata"></span></h2>
+
+        <div class="qr-box">
+            <img src="{{ url_for('static', filename='img/qr_daviplata.jpg') }}" alt="QR Daviplata">
+        </div>
+
+        <p class="numero">Número: <strong>{{ numero }}</strong></p>
+
+        <p class="mensaje">Después de pagar, regresa para finalizar el pedido.</p>
+
+        <a id="btnDaviplata" class="btn">Abrir Daviplata en el celular</a>
+    </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+    // Obtener total desde localStorage
+    let total = localStorage.getItem("total_pago");
+
+    // Si no existe, usar el valor desde Flask
+    if (!total || total === "0") {
+        total = "{{ valor }}";
+    }
+
+    document.getElementById("total_daviplata").innerText =
+        parseInt(total).toLocaleString();
+
+    const phone = "{{ numero }}";
+    document.getElementById("btnDaviplata").href =
+        `daviplata://sendmoney?phone=${phone}&amount=${total}`;
+});
+</script>
+
+</body>
+</html>

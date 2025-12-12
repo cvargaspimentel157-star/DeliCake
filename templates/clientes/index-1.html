@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DeliCake</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+</head>
+
+<body>
+  <div class="falling-products">
+    <span>🧁</span>
+    <span>🍪</span>
+    <span>🎂</span>
+    <span>🍩</span>
+    <span>🍰</span>
+    <span>🧁</span>
+    <span>🍪</span>
+    <span>🎂</span>
+  </div>
+   
+
+
+  {% block navbar%}
+{% include './navbar_cliente.html' %}
+{% endblock %}
+
+
+<section class="carrusel">
+    {% if banner_actual %}
+        <video autoplay muted loop playsinline width="700">
+            <source src="{{ url_for('static', filename=banner_actual) }}" type="video/mp4">
+            Tu navegador no soporta el video.
+        </video>
+    {% else %}
+        <p>No hay banner disponible</p>
+    {% endif %}
+</section>
+
+<section class="productos">
+  <h2>🌸 PRODUCTOS MÁS DESTACADOS</h2>
+  <p class="productos-subtitle">Postres únicos con el estilo <span>delicado</span> 💕</p>
+
+  <div class="carrusel-wrapper">
+    <button class="carrusel-btn izquierda" onclick="moverCarrusel(-1)">❮</button>
+
+    <div class="productos-container" id="productosCarrusel">
+      {% for producto in productos_destacados %}
+        <div class="producto-card">
+          <div class="producto-Img">
+            <img src="{{ url_for('static', filename='img/' ~ producto.Imagen) }}" alt="{{ producto.Nombre_producto }}">
+          </div>
+          <div class="producto-info">
+            <h3>{{ producto.Nombre_producto }}</h3>
+            <p>{{ producto.Descripcion_producto }}</p>
+            <p class="precio">${{ producto.Precio_Unitario }}</p>
+            <button class="btn-carrito"
+              onclick="abrirModal(
+                {{ producto.ID_Producto }},
+                '{{ producto.Nombre_producto }}',
+                {{ producto.Precio_Unitario }},
+                '{{ producto.Imagen }}'
+              )">🛒 ¡AGREGALO!</button>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+    <button class="carrusel-btn derecha" onclick="moverCarrusel(1)">❯</button>
+  </div>
+</section>
+
+<!-- 🛍️ MODAL CARRITO -->
+<div id="modalCarrito" class="modal-carrito" style="display: none;">
+  <div class="modal-contenido">
+    <div class="modal-header">
+      <span>🛒 Agregar al carrito</span>
+      <button class="cerrar" onclick="cerrarModal()">×</button>
+    </div>
+
+    <div class="modal-body">
+      <img id="modalImagen" src="" alt="Producto" class="modal-img">
+      <h3 id="modalNombre"></h3>
+      <p><strong>Precio:</strong> $<span id="modalPrecio"></span></p>
+
+      <div class="cantidad-controles">
+        <button onclick="cambiarCantidad(-1)">−</button>
+        <input type="text" id="modalCantidad" value="1" readonly>
+        <button onclick="cambiarCantidad(1)">+</button>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="cancelar" onclick="cerrarModal()">Cancelar</button>
+      <button class="confirmar" onclick="confirmarAgregar()">Confirmar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ---------- 🛒 MODAL CARRITO ---------- */
+let productoSeleccionado = {};
+
+function abrirModal(id, nombre, precio, imagen) {
+  const rutaImagen = imagen.includes("static/") || imagen.includes("img/")
+    ? imagen
+    : `/static/img/${imagen}`;
+
+  productoSeleccionado = { id, nombre, precio, imagen: rutaImagen, cantidad: 1 };
+
+  document.getElementById("modalNombre").textContent = nombre;
+  document.getElementById("modalPrecio").textContent = precio.toFixed(2);
+  document.getElementById("modalImagen").src = rutaImagen;
+  document.getElementById("modalCantidad").value = 1;
+  document.getElementById("modalCarrito").style.display = "flex";
+}
+
+function cerrarModal() {
+  document.getElementById("modalCarrito").style.display = "none";
+}
+
+function cambiarCantidad(valor) {
+  const input = document.getElementById("modalCantidad");
+  let cantidad = parseInt(input.value) + valor;
+  if (cantidad < 1) cantidad = 1;
+  input.value = cantidad;
+  productoSeleccionado.cantidad = cantidad;
+}
+
+function confirmarAgregar() {
+  fetch("{{ url_for('clientes.carrito_agregar') }}", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(productoSeleccionado)
+  })
+  .then(res => {
+    if (!res.ok) throw new Error("Error HTTP");
+    return res.json();
+  })
+  .then(data => {
+    if (data.ok) {
+      cerrarModal();
+      window.location.href = "{{ url_for('clientes.carrito') }}";
+    } else {
+      alert("❌ Error al agregar el producto.");
+    }
+  })
+  .catch(() => alert("⚠️ Error de conexión al servidor."));
+}
+
+/* ---------- 🎠 CARRUSEL ---------- */
+const carrusel = document.getElementById("productosCarrusel");
+const btnIzquierda = document.querySelector(".carrusel-btn.izquierda");
+const btnDerecha = document.querySelector(".carrusel-btn.derecha");
+
+function moverCarrusel(direccion) {
+  // Desplazamiento proporcional al número de productos visibles
+  const producto = document.querySelector(".producto-card");
+  const desplazamiento = producto ? producto.offsetWidth + 50 : 300;
+  carrusel.scrollBy({ left: direccion * desplazamiento, behavior: "smooth" });
+  setTimeout(actualizarFlechas, 400);
+}
+
+function actualizarFlechas() {
+  const maxScroll = carrusel.scrollWidth - carrusel.clientWidth;
+  btnIzquierda.classList.toggle("hidden", carrusel.scrollLeft <= 0);
+  btnDerecha.classList.toggle("hidden", carrusel.scrollLeft >= maxScroll - 5);
+}
+
+carrusel.addEventListener("scroll", actualizarFlechas);
+window.addEventListener("resize", actualizarFlechas);
+document.addEventListener("DOMContentLoaded", actualizarFlechas);
+</script>
+
+
+  
+
+  <section class="suscripcion">
+    <div class="container">
+      <h2 class="mb-4">💌 SUSCRIBETE A NUESTRO BOLETIN</h2>
+      <p class="mb-4">Recibe novedades, promociones y lanzamientos de productos directamente en tu correo.</p>
+      <form action="{{ url_for('clientes.suscribir1') }}" method="POST">
+        <input type="email" placeholder="Ingresa tu correo electrónico" required>
+        <button type="submit">Inscribirme 🎀 </button>
+      </form>
+  </section>
+  <section class="calificacion">
+    <div class="container">
+      <h2 class="mb-4">Califica y reseña nuestro servicio</h2>
+
+      <form action="{{ url_for('reseñar') }}" method="POST" class="w-50 mx-auto">
+        <input type="hidden" name="correo" value="{{ session.get('correo') }}">
+
+        <div class="mb-3">
+          <label class="form-label">Tu calificación:</label>
+          <div class="star-rating">
+            {% for i in range(5,0,-1) %}
+            <input type="radio" id="estrella{{i}}" name="estrellas" value="{{i}}" required>
+            <label for="estrella{{i}}">⭐</label>
+            {% endfor %}
+          </div>
+        </div>
+
+
+        <div class="mb-3">
+          <textarea name="comentario" class="form-control" placeholder="Escribe tu opinión..." required></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-pink fw-bold">Enviar reseña</button>
+      </form>
+
+
+      <div class="mt-5">
+        <h3>Opiniones de clientes</h3>
+        {% for r in reseñas %}
+        <div class="card my-3 p-3">
+          <p><strong>{{ r.correo }}</strong> - {{ r.estrellas }} ⭐</p>
+          <p>{{ r.comentario }}</p>
+          <small>{{ r.fecha.strftime("%d/%m/%Y") }}</small>
+        </div>
+        {% else %}
+        <p>No hay reseñas todavía.</p>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+
+
+  <section class="nosotros">
+    <h2>👩‍🍳 Nuestro Equipo</h2>
+    <div class="nosotros-contenido">
+      <img src="{{ url_for('static', filename='img/Nosotros.png') }}" alt="Equipo DeliCake">
+      <p>Somos un equipo apasionado por la repostería 💕, dedicados a crear postres únicos con un estilo delicado,
+        elegante y lleno de amor. 🎀</p>
+    </div>
+  </section>
+
+  <a href="{{ url_for('clientes.lanzamientos') }}" class="boton-flotante">
+  <span class="texto">Ver más</span>
+  <div class="icono">+</div>
+</a>
+
+
+
+
+
+  <div class="btn-fav position-fixed bottom-0 end-0 m-3 p-3 text-white rounded-circle shadow-lg">
+    <i class="bi bi-heart"></i><br>
+    <small>favoritos</small>
+  </div>
+
+   {% block footer%}
+{% include './footer.html' %}
+{% endblock %}
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+ 
+<style>
+
+  .inactividad-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(255, 240, 246, 0.55);
+    backdrop-filter: blur(7px);
+    z-index: 1050;
+    justify-content: center;
+    align-items: center;
+    pointer-events: auto; 
+    animation: fadeIn 0.6s ease-in-out;
+  }
+
+  
+  .inactividad-modal {
+    background: linear-gradient(145deg, #fff7fb 0%, #ffe1ed 100%);
+    color: #5c3a55;
+    border-radius: 22px;
+    box-shadow: 0 8px 30px rgba(185, 128, 157, 0.25);
+    padding: 35px 45px;
+    text-align: center;
+    width: 380px;
+    font-family: "Poppins", sans-serif;
+    animation: popIn 0.4s ease-out;
+  }
+
+  .inactividad-modal h3 {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: #824a76;
+    margin-bottom: 10px;
+  }
+
+  .inactividad-modal p {
+    font-size: 1rem;
+    color: #704f67;
+    margin-bottom: 18px;
+  }
+
+  /* ✨ Botón */
+  .btn-continuar {
+    background: linear-gradient(135deg, #f9c6da, #f4a6c0);
+    color: #542c47;
+    border: none;
+    border-radius: 12px;
+    padding: 10px 25px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 3px 10px rgba(238, 160, 185, 0.4);
+  }
+
+  .btn-continuar:hover {
+    transform: scale(1.05);
+    background: linear-gradient(135deg, #fbc8db, #f59bbd);
+    box-shadow: 0 5px 14px rgba(242, 167, 193, 0.6);
+  }
+
+ 
+  @keyframes popIn {
+    from { transform: scale(0.85); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  #contador {
+    font-weight: bold;
+    color: #e86c9a;
+    animation: pulse 1s infinite alternate;
+  }
+
+  @keyframes pulse {
+    from { transform: scale(1); opacity: 0.85; }
+    to { transform: scale(1.15); opacity: 1; }
+  }
+</style>
+
+
+<div class="inactividad-overlay" id="inactividadOverlay">
+  <div class="inactividad-modal">
+    <h3>💤 HAZ ESTADO INACTI@ 🚨</h3>
+    <p>Serás redirigid@ al inicio en <span id="contador">10</span> segundos 💫</p>
+    <button class="btn-continuar" id="cancelarRedireccion">Seguir aquí 💖</button>
+  </div>
+</div>
+
+
+<script>
+(function() {
+  const TIEMPO_INACTIVIDAD = 60 * 1000; 
+  const URL_REDIRECT = "{{ url_for('home') }}"; 
+  const overlay = document.getElementById('inactividadOverlay');
+  const contadorEl = document.getElementById('contador');
+  const btnCancelar = document.getElementById('cancelarRedireccion');
+  let inactividadTimer, redireccionTimer;
+
+  function mostrarVentana() {
+    overlay.style.display = 'flex';
+    let tiempo = 10;
+    contadorEl.textContent = tiempo;
+    redireccionTimer = setInterval(() => {
+      tiempo--;
+      contadorEl.textContent = tiempo;
+      if (tiempo <= 0) {
+        clearInterval(redireccionTimer);
+        window.location.href = URL_REDIRECT;
+      }
+    }, 1000);
+  }
+
+  function reiniciarInactividad() {
+    clearTimeout(inactividadTimer);
+    clearInterval(redireccionTimer);
+    overlay.style.display = 'none';
+    inactividadTimer = setTimeout(mostrarVentana, TIEMPO_INACTIVIDAD);
+  }
+
+  btnCancelar.addEventListener('click', () => {
+    overlay.style.display = 'none';
+    reiniciarInactividad();
+  });
+
+  ["mousemove", "keydown", "click", "scroll", "touchstart"].forEach(e =>
+    document.addEventListener(e, reiniciarInactividad)
+  );
+
+  reiniciarInactividad();
+})();
+</script>
+
+</body>
+</html>

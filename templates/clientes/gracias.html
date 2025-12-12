@@ -1,0 +1,19 @@
+
+<div class="gracias-page">
+  <div class="gracias-card">
+    <img src="{{ url_for('static', filename='img/gracias.png') }}" alt="Gracias" class="pastel-img">
+     <link rel="stylesheet" href="{{ url_for('static', filename='css/gracias.css') }}">
+
+    <div class="texto">
+      <h2>🎉 ¡Gracias por tu pedido, {{ current_user.username|capitalize }}!</h2>
+      <p>Tu pedido se ha registrado correctamente 💕</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  setTimeout(() => {
+    window.location.href = "{{ url_for('publica') }}";
+  }, 5000);
+</script>
+

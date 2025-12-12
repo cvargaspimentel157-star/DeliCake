@@ -1,0 +1,133 @@
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Agregar Producto</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
+</head>
+<style>
+  .footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    height: 115px;
+    width: 100%;
+    background: rgba(242, 242, 242, 0.9);
+    border-top: 3px solid #ff80ab;
+    padding: 15px 30px;
+    z-index: 1000;
+    box-shadow: 0 -3px 15px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(5px);
+  }
+
+
+  .footer-contenido {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+
+  .footer-item {
+    text-align: center;
+    font-size: 0.9rem;
+    color: #633835;
+    font-family: 'Comic Neue', cursive;
+  }
+
+  .footer-item h4 {
+    margin-bottom: 5px;
+    color: #d63384;
+    font-size: 1rem;
+  }
+
+.footer-link {
+    color: #d63384; /* Rosa */
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.footer-link:hover {
+    text-decoration: underline;
+    opacity: 0.9;
+}
+
+
+  
+  @media (min-width: 577px) and (max-width: 992px) {
+    .footer-contenido {
+      flex-wrap: wrap;
+      justify-content: center;
+      height: 140px;
+    }
+
+    @media (min-width: 300px) and (max-width: 650px) {
+
+      .footer-contenido {
+      flex-direction: column;
+      gap: 10px;
+    }
+    
+      .footer {
+        width: 100px;
+        height: 100px;
+      }
+
+      .footer-item {
+        font-size: 5px;
+      }
+      .footer-link {
+        font-size: 5px;
+      }
+      .footer-link:hover{
+        font-size: 5px;
+      }
+
+      .footer-contenido {
+        flex-direction: column;
+        align-items: center;
+        gap: 5px;
+      }
+
+      
+    }
+  }
+</style>
+<footer class="footer">
+  <div class="footer-contenido">
+    <div class="footer-item">
+      <h4>⏰ Horarios de atención</h4>
+      <p>{{ horario_1 }}</p>
+      <p>{{ horario_2 }}</p>
+    </div>
+    <div class="footer-item">
+      <span class="footer-icon"></span>
+      <h4 class="footer-title">Contáctanos</h4>
+      <a href="https://wa.me/573178563246?text=Hola%2C%20quisiera%20más%20información" target="_blank"
+        class="footer-link">
+        Escríbenos por WhatsApp
+      </a>
+    </div>
+
+
+    <div class="footer-item">
+      <h4> Preguntas</h4>
+      <a href="{{url_for('clientes.chat') }}" 
+        class="footer-link  font-family cursive" >habla con nuestro acesor IA</a>
+    </div>
+    <div class="footer-item">
+      <h4> Ubicación</h4>
+      <p>{{ ubicacion }}</p>
+    </div>
+  </div>
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+
+
+
+</html>

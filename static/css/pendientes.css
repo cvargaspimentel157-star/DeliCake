@@ -1,0 +1,141 @@
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background: #fff8f9;
+  color: #5a3d47;
+  margin: 0;
+  padding: 20px;
+}
+
+h1 {
+  text-align: center;
+  color: #a8416e;
+  margin-bottom: 30px;
+  font-weight: 600;
+}
+
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff0f6;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+
+thead {
+  background: #ffd6e0;
+}
+
+thead th {
+  text-align: left;
+  padding: 12px 15px;
+  color: #5a3d47;
+}
+
+
+tbody tr {
+  border-bottom: 1px solid #ffd6e0;
+  transition: background 0.3s ease, opacity 0.5s ease;
+}
+
+tbody tr:nth-child(even) {
+  background: #ffeaf3;
+}
+
+tbody tr:hover {
+  background: #ffd1e3;
+}
+
+/* Celdas */
+td {
+  padding: 10px 15px;
+}
+
+/* Botones de acciones */
+a {
+  text-decoration: none;
+  color: #a8416e;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: #ff6fa1;
+}
+
+/* Botón de eliminar visual */
+.delete-btn {
+  cursor: pointer;
+  background: #ff6fa1;
+  color: #fff;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9em;
+  margin-left: 10px;
+  transition: background 0.3s ease;
+}
+
+.delete-btn:hover {
+  background: #e03c7d;
+}
+
+
+.alert {
+  padding: 12px 15px;
+  margin-bottom: 15px;
+  border-radius: 10px;
+}
+
+.alert-success {
+  background: #d4f4dd;
+  color: #317a3b;
+}
+
+.alert-error {
+  background: #fddede;
+  color: #a63a3a;
+}
+
+
+.volver-btn:hover {
+  background: #e8a9c9; 
+  color: #fff;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 12px rgba(166, 77, 121, 0.4);
+}
+
+
+
+.volver-btn {
+  position: absolute;
+  top: 15px;
+  left: 20px;
+  background: linear-gradient(135deg, #f9c5d1, #fbc2eb); 
+  color: #fff;
+  font-weight: bold;
+  font-family: 'Segoe UI', cursive, sans-serif;
+  padding: 12px 28px;
+  border: none;
+  border-radius: 25px;
+  text-decoration: none;
+  box-shadow: 0 4px 10px rgba(249, 144, 187, 0.4);
+  transition: all 0.3s ease;
+}
+
+.volver-btn:hover {
+  background: linear-gradient(135deg, #fbc2eb, #f9c5d1);
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 6px 14px rgba(249, 144, 187, 0.5);
+}
+
+.volver-btn:active {
+  transform: scale(0.97);
+}
+
+.volver-btn::before {
+  content: "🎀 "; 
+}

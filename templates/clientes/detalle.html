@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DETALLE</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/detalle.css') }}">
+</head>
+
+<body>
+  <div class="falling-products">
+    <span>🧁</span>
+    <span>🍪</span>
+    <span>🎂</span>
+    <span>🍩</span>
+    <span>🍰</span>
+    <span>🧁</span>
+    <span>🍪</span>
+    <span>🎂</span>
+  </div>
+
+  <a href="javascript:history.back()" class="volver-btn">← Volver</a>
+
+ 
+
+
+  <br><br><br>
+  <div class="container">
+    <div class="card">
+      <br>
+
+      {% if producto.Descuento > 0 %}
+      <div class="descuento-badge">
+        -{{ producto.Descuento|int }}%
+      </div>
+      {% endif %}
+
+      <img src="{{ url_for('static', filename='img/' + producto.Imagen) }}" alt="{{ producto.Nombre_producto }}">
+      <div class="card-content">
+        <h1>{{ producto.Nombre_producto }}</h1>
+        <p class="descripcion">{{ producto.Descripcion_producto }}</p>
+        <p><strong>Ingredientes:</strong> {{ detalle.Ingredientes }}</p>
+        <p><strong>Tiempo de preparación:</strong> {{ detalle.tiempo_preparacion }}</p>
+
+
+        <div class="precio">
+
+          {% if producto.Descuento > 0 %}
+
+
+          <p class="precio-original">
+            ${{ producto.Precio_Unitario }}
+          </p>
+
+
+          <p class="precio-descuento">
+            ${{ producto.Precio_descuento }}
+          </p>
+
+
+          <p class="descuento">
+            Descuento: {{ producto.Descuento|int }}% 💰
+          </p>
+
+          {% else %}
+
+          <p class="precio-descuento">
+            ${{ producto.Precio_Unitario }}
+          </p>
+
+          {% endif %}
+        </div>
+
+
+        <!-- CALIFICACIÓN -->
+        <div class="calificacion">
+          <h2>⭐ Calificación</h2>
+          {% if promedio %}
+          <p class="promedio">Promedio: {{ promedio }}/5</p>
+          <div class="stars">
+            {% for i in range(1,6) %}
+            <span class="star {% if i <= promedio|round(0, 'floor') %} filled {% endif %}">★</span>
+            {% endfor %}
+          </div>
+          {% else %}
+          <p>Aún no hay calificaciones</p>
+          {% endif %}
+
+          <form method="POST" class="rating-form">
+            <label>Califica este producto:</label>
+            <div class="rating-input">
+              {% for i in range(5,0,-1) %}
+              <input type="radio" id="star{{ i }}" name="puntuacion" value="{{ i }}">
+              <label for="star{{ i }}">★</label>
+              {% endfor %}
+            </div>
+            <button type="submit" class="btn">Enviar</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="my-5">
+
+  <!-- SUGERENCIAS -->
+  <div class="text-center mb-4">
+    <h2 class="fw-bold text-warning">✨ Te podría interesar ✨</h2>
+    <p class="text-muted">Descubre más productos similares que podrían encantarte</p>
+    <div style="width: 100px; height: 4px; background: #ffc107; margin: 0 auto; border-radius: 2px;"></div>
+  </div>
+
+  <div id="sugerenciasCarousel" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-inner">
+      {% for i in range(0, sugerencias|length, 3) %}
+      <div class="carousel-item {% if i == 0 %}active{% endif %}">
+        <div class="row justify-content-center">
+          {% for sug in sugerencias[i:i+3] %}
+          <div class="col-md-4 mb-3">
+            <div class="card h-100 shadow-lg border-0 rounded-4 position-relative">
+
+              {% if sug.Descuento > 0 %}
+              <div class="descuento-badge">
+                -{{ sug.Descuento|int }}%
+              </div>
+              {% endif %}
+
+              <img src="{{ url_for('static', filename='img/' ~ sug.Imagen) }}" class="card-img-top rounded-top-4"
+                alt="{{ sug.Nombre_producto }}">
+
+              <div class="card-body text-center">
+                <h5 class="card-title fw-bold">{{ sug.Nombre_producto }}</h5>
+
+                
+                {% if sug.Descuento > 0 %}
+                <p class="text-muted" style="text-decoration: line-through;">
+                  ${{ sug.Precio_Unitario }}
+                </p>
+                <p class="text-success fw-bold fs-5">
+                  ${{ sug.Precio_descuento }}
+                </p>
+                {% else %}
+                <p class="fw-bold fs-5">${{ sug.Precio_Unitario }}</p>
+                {% endif %}
+
+                <a href="{{ url_for('admin.detalle', id=sug.ID_Producto) }}"
+                  class="btn btn-warning text-white fw-bold rounded-pill px-4 shadow-sm">
+                  Ver Detalle
+                </a>
+              </div>
+
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+    <button class="carousel-control-prev" type="button" data-bs-target="#sugerenciasCarousel" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon bg-dark rounded-circle p-3" aria-hidden="true"></span>
+      <span class="visually-hidden">Anterior</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#sugerenciasCarousel" data-bs-slide="next">
+      <span class="carousel-control-next-icon bg-dark rounded-circle p-3" aria-hidden="true"></span>
+      <span class="visually-hidden">Siguiente</span>
+    </button>
+  </div>
+
+  {% block footer %}
+  {% include './footer.html' %}
+  {% endblock %}
+
+
+  <style>
+    
+
+    .precio-original {
+      text-decoration: line-through !important;
+      color: #8e8e8e !important;
+      font-size: 18px !important;
+    }
+
+    .precio-descuento {
+      color: #28a745 !important;
+      font-weight: bold !important;
+      font-size: 24px !important;
+    }
+
+    .descuento {
+      color: #e17055 !important;
+      font-weight: bold !important;
+      font-size: 18px !important;
+    }
+
+    .descuento-badge {
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      background: linear-gradient(135deg, #ff4d6d, #c9184a);
+      color: white;
+      padding: 6px 12px;
+      font-size: 15px;
+      font-weight: bold;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+      animation: pop 0.4s ease-out;
+    }
+
+    @keyframes pop {
+      0% {
+        transform: scale(0.6);
+        opacity: 0;
+      }
+
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+
+    .card {
+      position: relative;
+    }
+
+    .inactividad-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(255, 240, 246, 0.55);
+      backdrop-filter: blur(7px);
+      z-index: 1050;
+      justify-content: center;
+      align-items: center;
+      pointer-events: auto;
+      animation: fadeIn 0.6s ease-in-out;
+    }
+
+
+    .inactividad-modal {
+      background: linear-gradient(145deg, #fff7fb 0%, #ffe1ed 100%);
+      color: #5c3a55;
+      border-radius: 22px;
+      box-shadow: 0 8px 30px rgba(185, 128, 157, 0.25);
+      padding: 35px 45px;
+      text-align: center;
+      width: 380px;
+      font-family: "Poppins", sans-serif;
+      animation: popIn 0.4s ease-out;
+    }
+
+    .inactividad-modal h3 {
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: #824a76;
+      margin-bottom: 10px;
+    }
+
+    .inactividad-modal p {
+      font-size: 1rem;
+      color: #704f67;
+      margin-bottom: 18px;
+    }
+
+    .btn-continuar {
+      background: linear-gradient(135deg, #f9c6da, #f4a6c0);
+      color: #542c47;
+      border: none;
+      border-radius: 12px;
+      padding: 10px 25px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 3px 10px rgba(238, 160, 185, 0.4);
+    }
+
+    .btn-continuar:hover {
+      transform: scale(1.05);
+      background: linear-gradient(135deg, #fbc8db, #f59bbd);
+      box-shadow: 0 5px 14px rgba(242, 167, 193, 0.6);
+    }
+
+
+    @keyframes popIn {
+      from {
+        transform: scale(0.85);
+        opacity: 0;
+      }
+
+      to {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
+    }
+
+    #contador {
+      font-weight: bold;
+      color: #e86c9a;
+      animation: pulse 1s infinite alternate;
+    }
+
+    @keyframes pulse {
+      from {
+        transform: scale(1);
+        opacity: 0.85;
+      }
+
+      to {
+        transform: scale(1.15);
+        opacity: 1;
+      }
+    }
+  </style>
+
+
+  <div class="inactividad-overlay" id="inactividadOverlay">
+    <div class="inactividad-modal">
+      <h3>💤 HAZ ESTADO INACTI@ 🚨</h3>
+      <p>Serás redirigid@ al inicio en <span id="contador">10</span> segundos 💫</p>
+      <button class="btn-continuar" id="cancelarRedireccion">Seguir aquí 💖</button>
+    </div>
+  </div>
+
+
+  <script>
+    (function () {
+      const TIEMPO_INACTIVIDAD = 60 * 1000;
+      const URL_REDIRECT = "{{ url_for('home') }}";
+      const overlay = document.getElementById('inactividadOverlay');
+      const contadorEl = document.getElementById('contador');
+      const btnCancelar = document.getElementById('cancelarRedireccion');
+      let inactividadTimer, redireccionTimer;
+
+      function mostrarVentana() {
+        overlay.style.display = 'flex';
+        let tiempo = 10;
+        contadorEl.textContent = tiempo;
+        redireccionTimer = setInterval(() => {
+          tiempo--;
+          contadorEl.textContent = tiempo;
+          if (tiempo <= 0) {
+            clearInterval(redireccionTimer);
+            window.location.href = URL_REDIRECT;
+          }
+        }, 1000);
+      }
+
+      function reiniciarInactividad() {
+        clearTimeout(inactividadTimer);
+        clearInterval(redireccionTimer);
+        overlay.style.display = 'none';
+        inactividadTimer = setTimeout(mostrarVentana, TIEMPO_INACTIVIDAD);
+      }
+
+      btnCancelar.addEventListener('click', () => {
+        overlay.style.display = 'none';
+        reiniciarInactividad();
+      });
+
+      ["mousemove", "keydown", "click", "scroll", "touchstart"].forEach(e =>
+        document.addEventListener(e, reiniciarInactividad)
+      );
+
+      reiniciarInactividad();
+    })();
+  </script>
+
+</body>
+
+</html>

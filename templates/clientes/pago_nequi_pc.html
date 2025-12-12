@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Pago con Nequi</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/pago_nequi.css') }}">
+</head>
+<body>
+
+<a href="javascript:history.back()" class="volver-btn">← Volver</a>
+<div class="falling-products">
+    <span>🧁</span><span>🍪</span><span>🎂</span><span>🍩</span>
+    <span>🍰</span><span>🧁</span><span>🍪</span><span>🎂</span>
+  </div>
+
+<div class="container">
+    <div class="card">
+        <h2>Escanea el código con Nequi</h2>
+        <h2>Total a pagar: $<span id="total_nequi"></span></h2>
+        
+
+        <div class="qr-box">
+            <img src="{{ url_for('static', filename='img/qr.jpg') }}" alt="QR Nequi">
+        </div>
+
+        <p class="numero">Número: <strong>{{ numero }}</strong></p>
+        <p class="mensaje">Después de pagar, regresa a la página para finalizar el pedido.</p>
+        <a id="btnNequi" class="btn">Abrir Nequi en el celular</a>
+    </div>
+</div>
+
+<!-- OVERLAY -->
+<div id="overlayBloqueo" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.75); color:#fff; z-index:9999; text-align:center; padding-top:12%;">
+    <h2>⏳ Un momento...</h2>
+    <p>El administrador está revisando tu pago.</p>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    // total: preferimos localStorage pero si no está usamos el valor pasado desde Flask
+    let total = localStorage.getItem("total_pago");
+    if (!total || total === "0") total = "{{ valor }}";
+    document.getElementById("total_nequi").innerText = parseInt(total).toLocaleString();
+
+    // establecer enlace nequi
+    const phone = "{{ numero }}";
+    document.getElementById("btnNequi").href = `nequi://sendmoney?phone=${phone}&amount=${total}`;
+
+    // guardar pago_id que viene del servidor en localStorage (clave: pago_id)
+    // si ya hay pago_id en localStorage, lo dejamos (por si re-entró)
+    const pagoIdServidor = "{{ pago_id }}";
+    if (pagoIdServidor && pagoIdServidor !== "None") {
+        localStorage.setItem("pago_id", pagoIdServidor);
+    }
+
+    // Guardar total actual también
+    localStorage.setItem("total_pago", total);
+
+    // MOSTRAR bloqueo a los 10s y comenzar a chequear estado
+    setTimeout(() => {
+        document.getElementById("overlayBloqueo").style.display = "block";
+        revisarPago(); // primer chequeo inmediato
+    }, 10000);
+});
+
+function revisarPago() {
+    const pagoId = localStorage.getItem("pago_id");
+
+    fetch(`/clientes/estado_pago/${pagoId}`)
+
+        .then(r => r.json())
+        .then(data => {
+
+            console.log("Respuesta servidor:", data);
+
+            if (data.estado === "Aprobado") {
+
+    document.getElementById("overlayBloqueo").style.display = "none";
+
+    // 🔥 REDIRECCIÓN ENVIANDO EL ID DEL PAGO A FLASK
+    window.location.href = `/clientes/confirmacion_pedido?pago_id=${pagoId}`;
+
+    return;
+}
+
+
+            // Rechazado
+            if (data.mensaje && data.mensaje.includes("rechazado")) {
+                document.getElementById("overlayBloqueo").style.display = "none";
+                alert("❌ Tu pago ha sido rechazado.");
+                window.location.reload();
+                return;
+            }
+
+            // Seguir revisando
+            setTimeout(revisarPago, 3000);
+        });
+}
+
+</script>
+
+</body>
+</html>

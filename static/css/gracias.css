@@ -1,0 +1,39 @@
+.gracias-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; 
+  background-color: #fff6fa; 
+  text-align: center;
+  font-family: 'Poppins', sans-serif;
+}
+
+.gracias-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: white;
+  padding: 40px;
+  border-radius: 30px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+  max-width: 700px;
+  width: 90%;
+}
+
+.pastel-img {
+  width: 80%; 
+  max-width: 500px; 
+  height: auto;
+  margin-bottom: 20px;
+}
+
+.texto h2 {
+  font-size: 2rem;
+  color: #d46a8c;
+  margin-bottom: 10px;
+}
+
+.texto p {
+  font-size: 1.2rem;
+  color: #555;
+}

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EDITAR</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/editar.css') }}">
+
+    <style>
+        .descuento-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: #e63946;
+            color: white;
+            padding: 6px 10px;
+            font-size: 14px;
+            font-weight: bold;
+            border-radius: 8px;
+            z-index: 10;
+        }
+
+        .card {
+            position: relative;
+        }
+    </style>
+</head>
+
+<body>
+  <div class="falling-products">
+    <span>🧁</span><span>🍪</span><span>🎂</span><span>🍩</span>
+    <span>🍰</span><span>🧁</span><span>🍪</span><span>🎂</span>
+  </div>
+
+  <a href="javascript:history.back()" class="volver-btn">← Volver</a>
+
+  
+  {% include './navbar_admin.html' %}
+
+  <h1 class="text-center mt-4">EDITAR PRODUCTOS 🍯</h1>
+
+  <div class="container my-4">
+    <input type="text" id="buscar" class="form-control mb-4" placeholder="Buscar producto..." onkeyup="filtrarProductos()">
+
+    <div id="lista-productos" class="row">
+      {% for producto in productos %}
+      <div class="col-md-4 mb-4 producto-card">
+        <div class="card shadow">
+
+          <!-- Badge de descuento -->
+          {% if producto.Descuento > 0 %}
+          <div class="descuento-badge">
+              -{{ producto.Descuento|int }}%
+          </div>
+          {% endif %}
+
+          <img src="{{ url_for('static', filename='img/' ~ producto.Imagen) }}" class="card-img-top">
+
+          <div class="card-body">
+            <h5 class="card-title">{{ producto.Nombre_producto }}</h5>
+
+            <!-- PRECIO FORMATEADO -->
+            {% if producto.Descuento > 0 %}
+                <p class="text-muted" style="text-decoration: line-through;">
+                    ${{ producto.Precio_Unitario }}
+                </p>
+                <p class="text-success fw-bold fs-5">
+                    ${{ producto.Precio_descuento }}
+                </p>
+            {% else %}
+                <p class="fw-bold fs-5">
+                    ${{ producto.Precio_Unitario }}
+                </p>
+            {% endif %}
+
+            <p class="card-text">
+              Descuento: {{ producto.Descuento|int }}%
+              {% if producto.Descuento > 0 %}
+              <span>💰</span>
+              {% endif %}
+            </p>
+
+            <form action="{{ url_for('admin.actualizar_producto', id=producto.ID_Producto) }}" method="POST" enctype="multipart/form-data">
+
+              <input type="text" class="form-control mb-2" name="nombre" value="{{ producto.Nombre_producto }}" required>
+
+              <textarea class="form-control mb-2" name="descripcion" required>{{ producto.Descripcion_producto }}</textarea>
+
+              <input type="number" class="form-control mb-2" name="precio" step="0.01"
+                     value="{{ producto.Precio_Unitario }}" required>
+
+              <label>Porcentaje de descuento (%)</label>
+              <input type="number" class="form-control mb-2" name="descuento" step="1"
+                     value="{{ producto.Descuento|int }}">
+
+              <label>Precio con descuento</label>
+              <input type="number" class="form-control mb-2"
+                     value="{{ producto.Precio_descuento or '' }}" readonly>
+
+              <select class="form-select mb-2" name="categoria" required>
+                {% for cat in categorias %}
+                  <option value="{{ cat.ID_Categoria }}" {% if cat.ID_Categoria == producto.ID_Categoria %}selected{% endif %}>
+                    {{ cat.Nombre_categoria }}
+                  </option>
+                {% endfor %}
+              </select>
+
+              <label>Imagen:</label>
+              <input type="file" class="form-control mb-3" name="imagen">
+
+              <button type="submit" class="btn btn-success w-100">Actualizar</button>
+            </form>
+
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  {% include './footer.html' %}
+
+  <script>
+    function filtrarProductos() {
+      let input = document.getElementById("buscar").value.toLowerCase();
+      let productos = document.getElementsByClassName("producto-card");
+
+      for (let i = 0; i < productos.length; i++) {
+        let titulo = productos[i].getElementsByTagName("h5")[0].innerText.toLowerCase();
+        productos[i].style.display = titulo.includes(input) ? "" : "none";
+      }
+    }
+  </script>
+
+</body>
+</html>
