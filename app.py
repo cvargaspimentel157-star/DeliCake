@@ -27,17 +27,14 @@ def generar_codigo():
     return ''.join(random.choices(string.digits, k=6))
 
 
-import os
-
-app = Flask(__name__)
-#configurar mi SECRECT KEY para que session funcione correctamente
-app.secret_key = "12345678"
-def generar_codigo():
-    return ''.join(random.choices(string.digits, k=6))
-
-
-# Configuración de la base de datos
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://usuario:@localhost/delicake'
+# CONFIGURACIÓN BASE DE DATOS con Railway
+app.config['SQLALCHEMY_DATABASE_URI'] = (
+    f"mysql+pymysql://{os.getenv('MYSQL_USER')}:"
+    f"{os.getenv('MYSQL_PASSWORD')}@"
+    f"{os.getenv('MYSQL_HOST')}:"
+    f"{os.getenv('MYSQL_PORT')}/"
+    f"{os.getenv('MYSQL_DATABASE')}"
+)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
@@ -47,7 +44,10 @@ app.config['MAIL_USERNAME'] = 'deli.cake404@gmail.com'
 app.config['MAIL_PASSWORD'] = 'xmwh hxnu zzvd pslv'  
 app.config['MAIL_DEFAULT_SENDER'] = ('DeliCake', 'deli.cake404@gmail.com')
 
+db = SQLAlchemy(app)
 mail = Mail(app)
+mail = Mail(app)
+
 # Inicialización de la base de datos y Flask-Login
 db.init_app(app)
 login_manager = LoginManager()
