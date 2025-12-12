@@ -11,3 +11,5 @@ python-dotenv
 email-validator
 pytz
 Werkzeug
+gunicorn
+
