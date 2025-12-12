@@ -92,7 +92,6 @@ El proyecto **Delicake** está desplegado en la plataforma **Render**, un servic
 ### 🔗 Enlace del despliegue
 
 👉 **Delicake en línea:**  
-https://TU-LINK-DE-RENDER-AQUI.com
 
 ---
 ## 7. Uso 
