@@ -12,4 +12,6 @@ email-validator
 pytz
 Werkzeug
 gunicorn
+pymysql
+flask_mysqldb
 

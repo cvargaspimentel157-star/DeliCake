@@ -35,6 +35,9 @@ app.config['SQLALCHEMY_DATABASE_URI'] = (
     f"{os.getenv('MYSQL_PORT')}/"
     f"{os.getenv('MYSQL_DATABASE')}"
 )
+
+# Configuración de la base de datos
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://usuario:@localhost/delicake'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
@@ -44,11 +47,16 @@ app.config['MAIL_USERNAME'] = 'deli.cake404@gmail.com'
 app.config['MAIL_PASSWORD'] = 'xmwh hxnu zzvd pslv'  
 app.config['MAIL_DEFAULT_SENDER'] = ('DeliCake', 'deli.cake404@gmail.com')
 
-db = SQLAlchemy(app)
-mail = Mail(app)
-mail = Mail(app)
 
 # Inicialización de la base de datos y Flask-Login
+app.config['MYSQL_HOST'] = os.getenv("MYSQLHOST")
+app.config['MYSQL_USER'] = os.getenv("MYSQLUSER")
+app.config['MYSQL_PASSWORD'] = os.getenv("MYSQLPASSWORD")
+app.config['MYSQL_DB'] = os.getenv("MYSQLDATABASE")
+app.config['MYSQL_PORT'] = int(os.getenv("MYSQLPORT", 3306))
+
+
+mail = Mail(app)
 db.init_app(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -568,7 +576,7 @@ def inject_footer():
         }
 
 if __name__ == '__main__':
-    with app.app_context():
-        db.create_all()
-    app.run(debug=True)
+    app.run()
+
+
 
