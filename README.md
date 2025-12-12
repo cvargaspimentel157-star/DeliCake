@@ -9,8 +9,9 @@
 
 ## 2. Descripción
 DeliCake es un sistema web que permite a los usuarios explorar un catálogo de productos de repostería, personalizarlos y realizar pedidos bajo demanda. La producción se realiza únicamente cuando un cliente hace un pedido, evitando el desperdicio de alimentos. 
-Entrar a la página principal.
-   ![Captura de ejemplo de Delicake](static/img/logo_DeliCake)
+
+
+   ![Captura de ejemplo de Delicake](static/img/logo_delicake.jpg)
 
 ---
 
