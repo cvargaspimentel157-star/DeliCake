@@ -74,25 +74,25 @@ Para ejecutar el proyecto necesitas:
 ---
 ## 6. 🌐 Despliegue
 
-El proyecto **Delicake** está desplegado en **Railway**, una plataforma en la nube que permite publicar aplicaciones web usando Python y Flask.
+El proyecto **Delicake** está desplegado en la plataforma **Render**, un servicio en la nube que permite publicar aplicaciones web basadas en Python y Flask.
 
-### 🔧 ¿Cómo se realizó el despliegue en Railway?
+### 🔧 ¿Cómo se realizó el despliegue en Render?
 
-1. Se creó una cuenta en **Railway.app**.
+1. Se creó una cuenta en **Render.com**.
 2. Se subió el repositorio del proyecto a **GitHub**.
-3. Desde Railway se seleccionó la opción **"New Project" → "Deploy from GitHub Repo"**.
-4. Se conectó Railway con el repositorio del proyecto.
-5. En la configuración del servicio se definió:
-   - **Build Command:**  
-     `pip install -r requirements.txt`
-   - **Start Command:**  
-     `python app.py`  
-6. Railway configuró automáticamente el entorno y generó un dominio público.
-7. Cada vez que se actualiza el repositorio, Railway realiza un **deploy automático**.
+3. Desde Render se seleccionó la opción **"Web Service"**.
+4. Se conectó Render con el repositorio del proyecto.
+5. En la configuración del servicio se definieron:
+   - **Runtime:** Python  
+   - **Build Command:** `pip install -r requirements.txt`  
+   - **Start Command:** `python app.py`
+6. Render generó automáticamente un servidor y asignó la URL pública del proyecto.
+7. Cada vez que se actualiza el repositorio en GitHub, Render realiza un redeploy automático.
 
 ### 🔗 Enlace del despliegue
 
 👉 **Delicake en línea:**  
+
 
 
 ---
