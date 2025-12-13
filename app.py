@@ -54,6 +54,10 @@ app.config['MYSQL_PASSWORD'] = os.getenv("MYSQLPASSWORD")
 app.config['MYSQL_DB'] = os.getenv("MYSQLDATABASE")
 app.config['MYSQL_PORT'] = int(os.getenv("MYSQLPORT", 3306))
 
+with app.app_context():
+    db.create_all()
+
+
 
 mail = Mail(app)
 db.init_app(app)
