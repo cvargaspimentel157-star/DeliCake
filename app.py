@@ -54,8 +54,11 @@ app.config['MYSQL_PASSWORD'] = os.getenv("MYSQLPASSWORD")
 app.config['MYSQL_DB'] = os.getenv("MYSQLDATABASE")
 app.config['MYSQL_PORT'] = int(os.getenv("MYSQLPORT", 3306))
 
+db.init_app(app)
+
 with app.app_context():
     db.create_all()
+
 
 
 
@@ -352,7 +355,6 @@ def login_admin():
 
 
 #RECUPERAR CONTRASEÑA
-app.secret_key = "12345678"
 def generar_codigo():
     return ''.join(random.choices(string.digits, k=6))
 
@@ -577,9 +579,13 @@ def inject_footer():
 
             "ubicacion": "Carrera 56 #19c-35"
         }
+    
+
+
 
 if __name__ == '__main__':
     app.run()
+    
 
 
 
