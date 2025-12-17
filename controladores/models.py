@@ -3,6 +3,7 @@ from flask_login import UserMixin
 from datetime import datetime
 from sqlalchemy.orm import relationship
 
+
 db = SQLAlchemy()
 
 

@@ -14,6 +14,8 @@ import string
 from datetime import datetime
 from email.mime.image import MIMEImage
 from flask_migrate import Migrate
+from flask_login import LoginManager
+from extensions import mail, mysql
 from extensions import MySQL
 import os
 
@@ -54,21 +56,16 @@ app.config['MYSQL_PASSWORD'] = os.getenv("MYSQLPASSWORD")
 app.config['MYSQL_DB'] = os.getenv("MYSQLDATABASE")
 app.config['MYSQL_PORT'] = int(os.getenv("MYSQLPORT", 3306))
 
-db.init_app(app)
 
+db.init_app(app)
 migrate = Migrate(app, db)
 
+mail.init_app(app)
+mysql.init_app(app)
 
-
-
-mail = Mail(app)
-db.init_app(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
-
-mysql = MySQL(app)
-
 
 
 
