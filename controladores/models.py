@@ -24,7 +24,7 @@ class Usuario(db.Model, UserMixin):
 
 
 class Cliente(db.Model):
-    __tablename__ = "Cliente"
+    __tablename__ = "cliente"
     ID_cliente = db.Column(db.Integer, primary_key=True, autoincrement=True)
     Direccion = db.Column(db.String(200))
     Telefono = db.Column(db.String(20))
@@ -41,7 +41,7 @@ class Cliente(db.Model):
 
 
 class Administrador(db.Model):
-    __tablename__ = "Administrador"
+    __tablename__ = "administrador"
     ID_admin = db.Column(db.Integer, primary_key=True, autoincrement=True)
     Rol = db.Column(db.String(50))
     ID_usuario = db.Column(db.Integer, db.ForeignKey("Usuario.ID_usuario"))
@@ -76,7 +76,7 @@ class Producto(db.Model):
 
 
 class Pedido(db.Model):
-    __tablename__ = "Pedido"
+    __tablename__ = "pedido"
 
     ID_Pedido = db.Column(db.Integer, primary_key=True, autoincrement=True)
     Fecha_Solicitud = db.Column(db.Date)
@@ -100,7 +100,7 @@ class Pedido(db.Model):
 
 
 class PersonalizacionProducto(db.Model):
-    __tablename__ = "Personalizacion_Producto"
+    __tablename__ = "personalizacion_Producto"
     ID_Personalizacion = db.Column(db.Integer, primary_key=True, autoincrement=True)
     Masa = db.Column(db.Enum('batida', 'azucarada', 'fermentadas'), default='batida')
     Relleno = db.Column(db.Enum('vainilla', 'dulce de leche', 'nueces', 'crema de limon'))
@@ -118,7 +118,7 @@ class PersonalizacionProducto(db.Model):
 
 
 class DetallePedido(db.Model):
-    __tablename__ = "Detalle_Pedido"
+    __tablename__ = "detalle_Pedido"
 
     ID_detalle_pedido = db.Column(db.Integer, primary_key=True, autoincrement=True)
     Nombre = db.Column(db.String(29))
@@ -155,7 +155,7 @@ class Categoria(db.Model):
 
 
 class DetalleProducto(db.Model):
-    __tablename__ = 'Detalle_Producto'
+    __tablename__ = 'detalle_Producto'
     ID_detalle_producto = db.Column(db.Integer, primary_key=True, autoincrement=True)
     Ingredientes = db.Column(db.String(70))
     tiempo_preparacion = db.Column(db.String(50))
@@ -166,7 +166,7 @@ class DetalleProducto(db.Model):
 
 
 class Pago(db.Model):
-    __tablename__ = "Pago"
+    __tablename__ = "pago"
 
     ID_pago = db.Column(db.Integer, primary_key=True, autoincrement=True)
     Monto = db.Column(db.Numeric(10, 2))
@@ -221,7 +221,7 @@ class Suscriptor(db.Model):
 
 
 class Notificacion(db.Model):
-    __tablename__ = "Notificacion"
+    __tablename__ = "notificacion"
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     usuario_id = db.Column(db.Integer, db.ForeignKey("Usuario.ID_usuario"), nullable=False)
     mensaje = db.Column(db.Text, nullable=False)
