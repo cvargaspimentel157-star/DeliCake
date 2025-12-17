@@ -52,7 +52,7 @@ class Administrador(db.Model):
 
 
 class Producto(db.Model):
-    __tablename__ = 'Producto'
+    __tablename__ = 'producto'
 
     ID_Producto = db.Column(db.Integer, primary_key=True, autoincrement=True)
     Nombre_producto = db.Column(db.String(255), nullable=False)

@@ -29,7 +29,7 @@ def generar_codigo():
     return ''.join(random.choices(string.digits, k=6))
 
 
-# CONFIGURACIÓN BASE DE DATOS con Railway
+# CONFIGURACIÓN BASE DE DATOS Railway
 app.config['SQLALCHEMY_DATABASE_URI'] = (
     f"mysql+pymysql://{os.getenv('MYSQL_USER')}:"
     f"{os.getenv('MYSQL_PASSWORD')}@"
