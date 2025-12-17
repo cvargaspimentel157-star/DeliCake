@@ -8,7 +8,7 @@ db = SQLAlchemy()
 
 
 class Usuario(db.Model, UserMixin):
-    __tablename__ = "Usuario"
+    __tablename__ = "usuario"
     ID_usuario = db.Column(db.Integer, primary_key=True, autoincrement=True)
     Nombre = db.Column(db.String(100), nullable=False)
     Apellido = db.Column(db.String(100), nullable=False)
@@ -146,7 +146,7 @@ class DetallePedido(db.Model):
 
 
 class Categoria(db.Model):
-    __tablename__ = 'Categoria'
+    __tablename__ = 'categoria'
     ID_Categoria = db.Column(db.Integer, primary_key=True, autoincrement=True)
     Nombre_categoria = db.Column(db.String(20))
     Nombre_producto = db.Column(db.String(40))
@@ -189,14 +189,14 @@ class Pago(db.Model):
 
 
 class Disponibilidad(db.Model):
-    __tablename__ = "Disponibilidad"
+    __tablename__ = "disponibilidad"
     ID = db.Column(db.Integer, primary_key=True, autoincrement=True)
     Fecha = db.Column(db.Date, nullable=False)
     Hora = db.Column(db.Time, nullable=False)
 
 
 class Calificacion(db.Model):
-    __tablename__ = "Calificacion"
+    __tablename__ = "calificacion"
     ID_Calificacion = db.Column(db.Integer, primary_key=True, autoincrement=True)
     ID_Producto = db.Column(db.Integer, db.ForeignKey("Producto.ID_Producto"), nullable=False)
     Valor = db.Column(db.Integer, nullable=False)
@@ -240,7 +240,7 @@ class Favorito(db.Model):
 
 
 class Lanzamiento(db.Model):
-    __tablename__ = 'Lanzamiento'
+    __tablename__ = 'lanzamiento'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     descripcion = db.Column(db.String(255), nullable=False)
     fecha_catalogo = db.Column(db.Date, nullable=False)
